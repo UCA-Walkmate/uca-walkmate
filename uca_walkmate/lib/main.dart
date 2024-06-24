@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:uca_walkmate/presentation/map/full_screen_map.dart';
+import 'package:uca_walkmate/presentation/screens/map/full_screen_map.dart';
 
 void main() {
   runApp(const MyApp());
