@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class CustomBottomAppBar extends StatefulWidget {
   final List<BottomBarItem> items;
@@ -6,16 +7,17 @@ class CustomBottomAppBar extends StatefulWidget {
   final int selectedIndex;
 
   CustomBottomAppBar({
+    super.key,
     required this.items,
     required this.onTap,
     this.selectedIndex = 0,
   });
 
   @override
-  _CustomBottomAppBarState createState() => _CustomBottomAppBarState();
+  CustomBottomAppBarState createState() => CustomBottomAppBarState();
 }
 
-class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
+class CustomBottomAppBarState extends State<CustomBottomAppBar> {
   int _currentIndex = 0;
 
   @override
@@ -28,6 +30,28 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
     setState(() {
       _currentIndex = index;
     });
+    //manteniendo el indice actual
+    // _currentIndex = index;
+
+    // logica de navegación segun el index con go_router
+    switch (index) {
+      case 0:
+        context.go('/'); // Pass the location as a positional argument
+        // context.pop();
+        break;
+      case 1:
+        context.go('/subject'); // Pass the location as a positional argument
+        // context.pop();
+        break;
+      case 2:
+        context.go('/events'); // Pass the location as a positional argument
+        // context.pop();
+        break;
+      default:
+        context.go('/');
+        break;
+    }
+
     widget.onTap(index);
   }
 

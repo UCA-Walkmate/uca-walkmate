@@ -7,6 +7,7 @@ import 'package:url_launcher/url_launcher.dart';
 // import 'custom_bottom_app_bar.dart'; // Asegúrate de importar el archivo correcto
 
 class FullScreenMap extends StatefulWidget {
+  static const String  routeName = 'home';
   const FullScreenMap({super.key});
 
   @override
