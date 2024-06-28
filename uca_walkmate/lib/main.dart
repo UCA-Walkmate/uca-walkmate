@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:uca_walkmate/config/theme/app_theme.dart';
 import 'package:uca_walkmate/presentation/map/full_screen_map.dart';
+import 'package:uca_walkmate/presentation/screens/subject_form_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,13 +16,11 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Mapa UCA',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const FullScreenMap(),
+      theme: AppTheme(selectedColor: 0).theme(),
+      home: const SubjectFormScreen(),
+     // home: const FullScreenMap(),
     );
-  }
-}
+  }}
+
 
 
