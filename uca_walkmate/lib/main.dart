@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:uca_walkmate/config/theme/app_theme.dart';
-import 'package:uca_walkmate/presentation/map/full_screen_map.dart';
 import 'package:uca_walkmate/presentation/screens/subject_form_screen.dart';
 
 void main() {

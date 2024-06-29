@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-List<String> days = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+List<String> days = [
+  'Lunes',
+  'Martes',
+  'Miércoles',
+  'Jueves',
+  'Viernes',
+  'Sábado'
+];
 
 class NewSubjectForm extends StatelessWidget {
   const NewSubjectForm({super.key});
@@ -12,15 +19,18 @@ class NewSubjectForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-    child: Padding(
-      padding: const EdgeInsets.all(25),
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+    double screenHeight = MediaQuery.of(context).size.height;
+    
+
+    return SizedBox(
+      height: screenHeight - 240,
+      child: Form(
+        child: ListView(
+          padding: const EdgeInsets.all(18),
           children: [
+            SizedBox(height: 15,),
             Text('Nombre',
-                textAlign: TextAlign.end,
+                textAlign: TextAlign.start,
                 style: GoogleFonts.publicSans(
                   textStyle: const TextStyle(
                     color: Color(0XFF4B465C),
@@ -29,6 +39,8 @@ class NewSubjectForm extends StatelessWidget {
                 )),
             TextFormField(
               decoration: InputDecoration(
+                floatingLabelBehavior: FloatingLabelBehavior.always,
+                prefixIcon: const Icon(Icons.book),
                 border: OutlineInputBorder(
                     borderSide:
                         const BorderSide(color: Color(0XFF5A72A0), width: 1),
@@ -41,7 +53,7 @@ class NewSubjectForm extends StatelessWidget {
               height: 10,
             ),
             Text('Ubicación',
-                textAlign: TextAlign.end,
+                textAlign: TextAlign.start,
                 style: GoogleFonts.publicSans(
                   textStyle: const TextStyle(
                     color: Color(0XFF4B465C),
@@ -52,52 +64,54 @@ class NewSubjectForm extends StatelessWidget {
               items: const [
                 DropdownMenuItem(
                   value: 'hola',
-                  child: Text('Hola'),
+                  child: Text('Auditorio'),
                 ),
                 DropdownMenuItem(
                   value: 'como',
-                  child: Text('Como'),
+                  child: Text('Aulas D'),
                 ),
                 DropdownMenuItem(
                   value: 'estas',
-                  child: Text('Estas'),
+                  child: Text('Magna I'),
                 )
               ],
               onChanged: (value) {},
               decoration: InputDecoration(
+                floatingLabelBehavior: FloatingLabelBehavior.always,
                 border: OutlineInputBorder(
                     borderSide:
                         const BorderSide(color: Color(0XFF5A72A0), width: 1),
                     borderRadius: BorderRadius.circular(10.0)),
                 labelText: "",
-                hintText: "Algebra Vectorial y Matrices",
+                hintText: "Escoge la ubicación",
               ),
             ),
             const SizedBox(
-              height: 10,
+              height: 15,
             ),
             Text('Horario',
-                textAlign: TextAlign.end,
+                textAlign: TextAlign.start,
                 style: GoogleFonts.publicSans(
                   textStyle: const TextStyle(
                     color: Color(0XFF4B465C),
                     fontSize: 15,
                   ),
                 )),
-                
-                Column(
-                  children: days.map((day) => DailyCheckBox(day: day)).toList(),
-                )
-                
-                
+            SingleChildScrollView(
+              child: Column(
+                children: days.map((day) => DailyCheckBox(day: day)).toList(),
+              ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            
           ],
         ),
       ),
-    ),
-          );
+    );
   }
 }
-
 
 class DailyCheckBox extends StatelessWidget {
   final String day;
@@ -110,10 +124,10 @@ class DailyCheckBox extends StatelessWidget {
       children: [
         CheckboxListTile(
           title: Text(day),
-          value: false, 
+          value: false,
           onChanged: (value) => true,
           controlAffinity: ListTileControlAffinity.leading,
-      )
+        )
       ],
     );
   }
