@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:uca_walkmate/config/router/app_router.dart';
+import 'package:uca_walkmate/config/theme/app_theme.dart';
 // import 'package:uca_walkmate/presentation/screens/map/full_screen_map.dart';
 
 void main() {
@@ -13,13 +14,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      routerConfig: AppRouter,
+      routerConfig: appRouter,
       debugShowCheckedModeBanner: false,
       title: 'Mapa UCA',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
+      theme: AppTheme().getTheme(),
       // home: const FullScreenMap(),
     );
   }
