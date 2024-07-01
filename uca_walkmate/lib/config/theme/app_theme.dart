@@ -1,6 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+const Color whiteUW = Color(0XFFFDFFE2);
+const Color blueUW = Color(0XFF83B4FF);
+const Color grayUW = Color(0XFF5A72A0);
+const Color darkblueUW = Color(0XFF1A2130);
+
+const List<Color> colorThemes = [
+  whiteUW,
+  blueUW,
+  darkblueUW,
+  grayUW,
+];
+
 class AppTheme {
   
   ThemeData getTheme() => ThemeData(
