@@ -19,6 +19,7 @@ class AppTheme {
     colorScheme: ColorScheme.fromSeed(
       seedColor: const Color(0xff1A2130),
       primary: const Color(0xff1A2130),
+      secondary: blueUW,
 
     ), 
     scaffoldBackgroundColor: Colors.white,
