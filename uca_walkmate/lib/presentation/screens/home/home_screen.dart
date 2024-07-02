@@ -20,6 +20,9 @@ class _HomeScreenState extends State<HomeScreen> {
       const SubjectScreen(),
       const EventScreen(),
     ];
+
+    final colors = Theme.of(context).colorScheme;
+
     return Scaffold(
       body: Stack(
         children: [
@@ -35,6 +38,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Container(
                   color: Colors.transparent, // Hace el contenedor transparente
                   child: BottomNavigationBar(
+                    unselectedItemColor: Colors.white,
+                    selectedItemColor: colors.secondary,
                     currentIndex: selectedIndex,
                     onTap: (value) {
                       setState(() {
