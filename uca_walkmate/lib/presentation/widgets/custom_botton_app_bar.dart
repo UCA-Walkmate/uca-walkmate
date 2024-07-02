@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class CustomBottomAppBar extends StatefulWidget {
-  final List<BottomBarItem> items;
+  // final List<BottomBarItem> items;
   final ValueChanged<int> onTap;
   final int selectedIndex;
 
   CustomBottomAppBar({
     super.key,
-    required this.items,
+    // required this.items,
     required this.onTap,
     this.selectedIndex = 0,
   });
@@ -19,6 +19,11 @@ class CustomBottomAppBar extends StatefulWidget {
 
 class CustomBottomAppBarState extends State<CustomBottomAppBar> {
   int _currentIndex = 0;
+  List<BottomBarItem> items = [
+    BottomBarItem(icon: Icons.home),
+    BottomBarItem(icon: Icons.book),
+    BottomBarItem(icon: Icons.event),
+  ];
 
   @override
   void initState() {
@@ -65,8 +70,8 @@ class CustomBottomAppBarState extends State<CustomBottomAppBar> {
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: widget.items.map((item) {
-          int index = widget.items.indexOf(item);
+        children: items.map((item) {
+          int index = items.indexOf(item);
           bool isSelected = index == _currentIndex;
           return GestureDetector(
             onTap: () => _onItemTapped(index),
