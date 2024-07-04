@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:uca_walkmate/presentation/providers/auth_provider.dart';
+import 'package:uca_walkmate/presentation/providers/login_form_provider.dart';
+import 'package:uca_walkmate/presentation/widgets/shared/custom_text_form_field.dart';
 import 'package:uca_walkmate/presentation/widgets/shared/wave_widget.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -12,96 +16,106 @@ class LoginScreen extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     final bool keyboardOpen = MediaQuery.of(context).viewInsets.bottom > 0;
     final colors = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
 
-    return Scaffold(
-      body: Stack(
-        children: [ 
-          // Top wave animation
-          Container(
-            height: size.height - 200,
-            color: colors.primary,
-          ),
-
-          AnimatedPositioned(
-            duration: const Duration(milliseconds: 500),
-            curve: Curves.easeOutQuad,
-            top: keyboardOpen ? -size.height / 3.7 : 0.0,
-            child: WaveWidget(
-              size: size,
-              yOffset: size.height / 3.0,
-              color: Colors.white,
+    return GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: Scaffold(
+        body: Stack(
+          children: [ 
+            // Top wave animation
+            Container(
+              height: size.height - 200,
+              color: colors.primary,
             ),
-          ),
-
-          const Padding(
-            padding: EdgeInsets.only(top: 100.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  'Bienvenido a \nUCA Walkmate',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 40.0,
-                    fontWeight: FontWeight.w900,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          
-
-          // FORM
-          Padding(
-            padding: const EdgeInsets.all(30.0),
-            child: _LoginForm(textTheme: textTheme, colors: colors, keyboardOpen: keyboardOpen),
-          ),      
-                   
       
-        ],
+            AnimatedPositioned(
+              duration: const Duration(milliseconds: 500),
+              curve: Curves.easeOutQuad,
+              top: keyboardOpen ? -size.height / 3.7 : 0.0,
+              child: WaveWidget(
+                size: size,
+                yOffset: size.height / 3.0,
+                color: Colors.white,
+              ),
+            ),
+      
+            const Padding(
+              padding: EdgeInsets.only(top: 100.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    'Bienvenido a \nUCA Walkmate',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 40.0,
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            
+      
+            // FORM
+            const _LoginForm(),                 
+        
+          ],
+        ),
       ),
     );
   }
 }
 
-class _LoginForm extends StatelessWidget {
-  final TextTheme textTheme;
-  final ColorScheme colors;
-  final bool keyboardOpen;
+class _LoginForm extends ConsumerWidget {
   
-  const _LoginForm({
-    required this.textTheme,
-    required this.colors,
-    required this.keyboardOpen,
-  });
+  const _LoginForm();
+
+  void showSnackbar( BuildContext context, String message ) {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message))
+    );
+  }
 
   @override
-  Widget build(BuildContext context) {
-    return Form(
+  Widget build(BuildContext context, WidgetRef ref) {
+    final bool keyboardOpen = MediaQuery.of(context).viewInsets.bottom > 0;
+    final colors = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
+    final loginForm = ref.watch(loginFormProvider);
+
+    ref.listen(authProvider, (previous, next) {
+      if (next.errorMessage.isEmpty) return;
+
+      showSnackbar(context, next.errorMessage);
+    });
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 30),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          Text('Email', style: textTheme.bodyMedium),
-            TextFormField(
-              decoration: const InputDecoration(
-              hintText: 'johndoe@email.com',
-              prefixIcon: Icon(Icons.email_outlined),
-              border: UnderlineInputBorder()
-            ),
+
+          CustomTextFormField(
+            label: 'Email',
+            hintText: 'johndoe@email.com',
+            prefixIcon: Icons.email_outlined,
+            onChanged: ref.read(loginFormProvider.notifier).onEmailChange,
+            errorMessage: loginForm.isFormPosted? loginForm.email.errorMessage : null,
           ),
               
           const SizedBox(height: 20,),
-              
-          Text('Contraseña', style: textTheme.bodyMedium),
-          TextFormField(
+
+          CustomTextFormField(
+            label: 'Contraseña',
+            hintText: '***********',
+            prefixIcon: Icons.lock_outline,
+            onChanged: ref.read(loginFormProvider.notifier).onPasswordChange,
+            errorMessage: loginForm.isFormPosted? loginForm.password.errorMessage : null,
             obscureText: true,
-            decoration: const InputDecoration(
-              hintText: '**********',
-              prefixIcon: Icon(Icons.lock_outline),
-              border: UnderlineInputBorder()
-            ),
           ),
     
           const SizedBox(height: 50,),
@@ -114,7 +128,7 @@ class _LoginForm extends StatelessWidget {
                 color: colors.primary,
                 child: InkWell(
                   onTap: () {
-
+                    ref.read(loginFormProvider.notifier).onFormSubmit();
                   },
                   child: const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
@@ -148,7 +162,7 @@ class _LoginForm extends StatelessWidget {
             ),
           ),
     
-          SizedBox(height: keyboardOpen? 0 : 75,),
+          SizedBox(height: keyboardOpen? 30 : 75),
     
         ],
       ),
