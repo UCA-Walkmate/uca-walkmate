@@ -1,5 +1,5 @@
 import 'package:uca_walkmate/domain/domain.dart';
-import 'package:uca_walkmate/infrastructure/mappers/role_mapper.dart';
+import 'package:uca_walkmate/infrastructure/infrastructure.dart';
 
 class UserMapper {
 
@@ -7,7 +7,6 @@ class UserMapper {
     id: json['id'], 
     name: json['name'], 
     email: json['email'], 
-    password: json['password'], 
     role: RoleMapper.roleJsonToEntity(json['role']), 
     token: json['token']
   );
