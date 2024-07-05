@@ -2,10 +2,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:uca_walkmate/presentation/screens/auth/check_auth_status_screen.dart';
 import 'package:uca_walkmate/presentation/screens/event/event_screen.dart';
+import 'package:uca_walkmate/presentation/screens/home/home_screen.dart';
 import 'package:uca_walkmate/presentation/screens/login/login_screen.dart';
 import 'package:uca_walkmate/presentation/screens/signup/sign_up_screen.dart';
-// import 'package:uca_walkmate/presentation/screens/map/full_screen_map.dart';
 import 'package:uca_walkmate/presentation/screens/subject/subject_screen.dart';
+import 'package:uca_walkmate/presentation/screens/subject_form_screen.dart';
 
 final goRouterProvider = Provider((ref) {
   return GoRouter(

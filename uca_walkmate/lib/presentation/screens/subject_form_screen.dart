@@ -4,22 +4,32 @@ import 'package:uca_walkmate/presentation/widgets/appbar/subject_app_bar.dart';
 import 'package:uca_walkmate/presentation/widgets/form/new_subject_form.dart';
 
 class SubjectFormScreen extends StatelessWidget {
+  static const routeName = 'subject-form';
+ 
   const SubjectFormScreen({super.key});
 
+  
   @override
   Widget build(context) {
     double screenWidth = MediaQuery.of(context).size.width;
 
-    return Scaffold(
+    return const Scaffold(
         resizeToAvoidBottomInset: true,
-        backgroundColor: const Color(0XFFF8F7FA),
+        backgroundColor: Color(0XFFF8F7FA),
         body: SingleChildScrollView(
           child: Column(
             children: [
               //Appbar
-              const SubjectsAppBar(),
+              SubjectsAppBar(),
 
-              Stack(
+              //Form
+                  SingleChildScrollView(child: NewSubjectForm()),
+                  //NewSubjectButton()
+
+                  //Button
+                 
+
+             /* Stack(
                 children: [
                   //Form
                   const SingleChildScrollView(child: NewSubjectForm()),
@@ -30,7 +40,7 @@ class SubjectFormScreen extends StatelessWidget {
                       left: screenWidth - 300,
                       child: const NewSubjectButton()),
                 ],
-              )
+              )*/
 
               //Button
             ],
