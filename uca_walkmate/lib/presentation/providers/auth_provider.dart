@@ -6,21 +6,26 @@ import 'package:uca_walkmate/infrastructure/infrastructure.dart';
 final authProvider = StateNotifierProvider<AuthNotifier,AuthState>((ref) {
 
   final authRepository = AuthRepositoryImpl();
+  final keyValueStorageService = KeyValueStorafeImpl();
 
   return AuthNotifier(
-    authRepository: authRepository
+    authRepository: authRepository,
+    keyValueStorageService: keyValueStorageService
   );
 });
-
 
 
 class AuthNotifier extends StateNotifier<AuthState> {
 
   final AuthRepository authRepository;
+  final KeyValueStorage keyValueStorageService;
 
   AuthNotifier({
-    required this.authRepository
-  }): super( AuthState() );
+    required this.authRepository,
+    required this.keyValueStorageService,
+  }): super( AuthState() ) {
+    checkAuthStatus();
+  }
   
 
   Future<void> loginUser(String email, String password) async {
@@ -35,19 +40,31 @@ class AuthNotifier extends StateNotifier<AuthState> {
     } catch (e){
       logout('Uncontrolled error');
     }
-
   }
+
 
   void registerUser( String email, String password ) async {
     
   }
 
   void checkAuthStatus() async {
+    final token = await keyValueStorageService.getValue<String>('token');
     
+    if(token == null) return logout();
+
+    try {
+      final user = await authRepository.checkAuthStatus(token);
+      _setLoggedUser(user);
+
+    } catch (e) {
+      logout();
+    }
+
   }
 
-  void _setLoggedUser( User user ) {
-    
+  void _setLoggedUser( User user ) async {
+    await keyValueStorageService.setKeyValue<String>('token', user.token);
+
     state = state.copyWith(
       user: user,
       authStatus: AuthStatus.authenticated,
@@ -56,7 +73,8 @@ class AuthNotifier extends StateNotifier<AuthState> {
   }
 
   Future<void> logout([ String? errorMessage ]) async {
-    
+    await keyValueStorageService.removeKey('token');
+
     state = state.copyWith(
       authStatus: AuthStatus.unathenticated,
       user: null,
