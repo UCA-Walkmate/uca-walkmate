@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:uca_walkmate/data/apis/graph_hopper_api.dart';
-import 'package:uca_walkmate/presentation/widgets/custom_botton_app_bar.dart';
 import 'package:url_launcher/url_launcher.dart';
-// import 'custom_bottom_app_bar.dart'; // Asegúrate de importar el archivo correcto
 
 class FullScreenMap extends StatefulWidget {
   static const String  routeName = 'home';
@@ -38,20 +36,19 @@ class _FullScreenMapState extends State<FullScreenMap> {
     });
   }
 
-  int _selectedIndex = 0;
+  // int _selectedIndex = 0;
 
-  void _onBottomBarItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-      // Maneja la lógica adicional aquí si es necesario
+  // void _onBottomBarItemTapped(int index) {
+  //   setState(() {
+  //     _selectedIndex = index;
+  //     // Maneja la lógica adicional aquí si es necesario
       
-    });
-  }
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
+    return Stack(
         children: [
           FlutterMap(
             options: const MapOptions(
@@ -97,27 +94,7 @@ class _FullScreenMapState extends State<FullScreenMap> {
               ),
             ],
           ),
-          //boton flotante para obtener la ruta de la api TODO: se puede mejorar
-          Positioned(
-            bottom: 20,
-            //posicionando el widget en el centro pero dependiendo del tamaño de la pantalla
-            left: 30,
-            right:  30,
-            child: Center(
-              child: CustomBottomAppBar(
-                items: [
-                  BottomBarItem(icon: Icons.location_on_outlined),
-                  BottomBarItem(icon: Icons.book_outlined),
-                  BottomBarItem(icon: Icons.calendar_today_rounded),
-                ],
-                selectedIndex: _selectedIndex,
-                onTap: _onBottomBarItemTapped,
-              ),
-            ),
-          ),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
+         FloatingActionButton(
         
         backgroundColor: Colors.blueAccent,
         onPressed: () => getCoordinate(),
@@ -125,7 +102,27 @@ class _FullScreenMapState extends State<FullScreenMap> {
           Icons.route,
           color: Colors.red,
         ),
-      ),
-    );
+      )
+          //boton flotante para obtener la ruta de la api TODO: se puede mejorar
+          // Positioned(
+          //   bottom: 20,
+          //   //posicionando el widget en el centro pero dependiendo del tamaño de la pantalla
+          //   left: 30,
+          //   right:  30,
+          //   child: Center(
+          //     child: CustomBottomAppBar(
+          //       // items: [
+          //       //   BottomBarItem(icon: Icons.location_on_outlined),
+          //       //   BottomBarItem(icon: Icons.book_outlined),
+          //       //   BottomBarItem(icon: Icons.calendar_today_rounded),
+          //       // ],
+          //       selectedIndex: _selectedIndex,
+          //       onTap: _onBottomBarItemTapped,
+          //     ),
+          //   ),
+          // ),
+        ],
+      );
+      
   }
 }

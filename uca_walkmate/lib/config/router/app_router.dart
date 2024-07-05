@@ -1,14 +1,16 @@
 import 'package:go_router/go_router.dart';
 import 'package:uca_walkmate/presentation/screens/event/event_screen.dart';
-import 'package:uca_walkmate/presentation/screens/map/full_screen_map.dart';
+import 'package:uca_walkmate/presentation/screens/home/home_screen.dart';
+import 'package:uca_walkmate/presentation/screens/login/login_screen.dart';
+import 'package:uca_walkmate/presentation/screens/signup/sign_up_screen.dart';
 import 'package:uca_walkmate/presentation/screens/subject/subject_screen.dart';
 import 'package:uca_walkmate/presentation/screens/subject_form_screen.dart';
 
-final AppRouter = GoRouter(routes: [
+final appRouter = GoRouter(routes: [
   GoRoute(
-    name: SubjectFormScreen.routeName,
+    name: LoginScreen.routeName,
     path: '/',
-    builder: (context, state) => const SubjectFormScreen(),
+    builder: (context, state) => const HomeScreen(),
   ),
   GoRoute(
     name: SubjectScreen.routeName,
@@ -19,5 +21,10 @@ final AppRouter = GoRouter(routes: [
     name: EventScreen.routeName,
     path: '/events',
     builder: (context, state) => const EventScreen(),
+  ),
+  GoRoute(
+    name: SignUpScreen.routeName,
+    path: '/signup',
+    builder: (context, state) => const SignUpScreen(),
   ),
 ]);
