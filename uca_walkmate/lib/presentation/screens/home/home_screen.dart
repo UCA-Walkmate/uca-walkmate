@@ -4,6 +4,8 @@ import 'package:uca_walkmate/presentation/screens/map/full_screen_map.dart';
 import 'package:uca_walkmate/presentation/screens/subject/subject_screen.dart';
 
 class HomeScreen extends StatefulWidget {
+  static const String routeName = 'home-screen';
+
   const HomeScreen({super.key});
 
   @override
