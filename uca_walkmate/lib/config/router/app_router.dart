@@ -4,13 +4,12 @@ import 'package:uca_walkmate/presentation/screens/home/home_screen.dart';
 import 'package:uca_walkmate/presentation/screens/login/login_screen.dart';
 import 'package:uca_walkmate/presentation/screens/signup/sign_up_screen.dart';
 import 'package:uca_walkmate/presentation/screens/subject/subject_screen.dart';
+import 'package:uca_walkmate/presentation/screens/subject_form_screen.dart';
 
 final appRouter = GoRouter(routes: [
   GoRoute(
     name: LoginScreen.routeName,
     path: '/',
-    // builder: (context, state) => const LoginScreen(),
-    // builder: (context, state) => const FullScreenMap(),
     builder: (context, state) => const HomeScreen(),
   ),
   GoRoute(

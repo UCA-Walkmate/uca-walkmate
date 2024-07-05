@@ -1,14 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-List<String> days = [
-  'Lunes',
-  'Martes',
-  'Miércoles',
-  'Jueves',
-  'Viernes',
-  'Sábado'
-];
+List<String> days1 = ['Lunes', 'Martes', 'Miércoles'];
+
+List<String> days2 = ['Jueves', 'Viernes', 'Sábado'];
 
 class NewSubjectForm extends StatelessWidget {
   const NewSubjectForm({super.key});
@@ -20,15 +15,16 @@ class NewSubjectForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
-    
 
     return SizedBox(
       height: screenHeight - 240,
       child: Form(
         child: ListView(
-          padding: const EdgeInsets.all(18),
+          padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
           children: [
-            SizedBox(height: 15,),
+            const SizedBox(
+              height: 15,
+            ),
             Text('Nombre',
                 textAlign: TextAlign.start,
                 style: GoogleFonts.publicSans(
@@ -50,7 +46,7 @@ class NewSubjectForm extends StatelessWidget {
               ),
             ),
             const SizedBox(
-              height: 10,
+              height: 15,
             ),
             Text('Ubicación',
                 textAlign: TextAlign.start,
@@ -97,15 +93,28 @@ class NewSubjectForm extends StatelessWidget {
                     fontSize: 15,
                   ),
                 )),
-            SingleChildScrollView(
-              child: Column(
-                children: days.map((day) => DailyCheckBox(day: day)).toList(),
-              ),
+            Row(
+              children: [
+                Expanded(
+                  // Fills available space horizontally
+                  child: Column(
+                    children:
+                        days1.map((day) => DailyCheckBox(day: day)).toList(),
+                  ),
+                ),
+                Expanded(
+                  // Second column with similar logic
+                  child: Column(
+                    children:
+                        days2.map((day) => DailyCheckBox(day: day)).toList(),
+                  ),
+                ),
+              ],
             ),
             const SizedBox(
               height: 20,
             ),
-            
+            const NewSubjectButton()
           ],
         ),
       ),
@@ -123,12 +132,48 @@ class DailyCheckBox extends StatelessWidget {
     return Column(
       children: [
         CheckboxListTile(
-          title: Text(day),
+          title: Text(day,
+              textAlign: TextAlign.start,
+              style: GoogleFonts.publicSans(
+                textStyle: const TextStyle(
+                  color: Color(0XFF4B465C),
+                  fontSize: 15,
+                ),
+              )),
           value: false,
           onChanged: (value) => true,
           controlAffinity: ListTileControlAffinity.leading,
+          contentPadding: const EdgeInsets.only(left: 8),
         )
       ],
+    );
+  }
+}
+
+class NewSubjectButton extends StatelessWidget {
+  const NewSubjectButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: () {
+        // Handle button press action here
+      },
+      style: ElevatedButton.styleFrom(
+        backgroundColor: const Color(0XFF1A2130),
+        padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30),
+        ),
+      ),
+      child: Text('Agregar materia',
+          textAlign: TextAlign.end,
+          style: GoogleFonts.publicSans(
+            textStyle: const TextStyle(
+              color: Color(0XFFFDFFE2),
+              fontSize: 18,
+            ),
+          )),
     );
   }
 }
