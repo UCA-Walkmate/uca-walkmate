@@ -16,6 +16,7 @@ class LoginScreen extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     final bool keyboardOpen = MediaQuery.of(context).viewInsets.bottom > 0;
     final colors = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
 
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
@@ -58,7 +59,7 @@ class LoginScreen extends StatelessWidget {
             
       
             // FORM
-            const _LoginForm(),                 
+            _LoginForm(keyboardOpen: keyboardOpen, colors: colors, textTheme: textTheme),                 
         
           ],
         ),
@@ -68,8 +69,15 @@ class LoginScreen extends StatelessWidget {
 }
 
 class _LoginForm extends ConsumerWidget {
+  final bool keyboardOpen;
+  final ColorScheme colors;
+  final TextTheme textTheme;
   
-  const _LoginForm();
+  const _LoginForm({
+    required this.keyboardOpen,
+    required this.colors,
+    required this.textTheme
+  });
 
   void showSnackbar( BuildContext context, String message ) {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
@@ -79,11 +87,7 @@ class _LoginForm extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final bool keyboardOpen = MediaQuery.of(context).viewInsets.bottom > 0;
-    final colors = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
-
+  Widget build(BuildContext context, WidgetRef ref) {    
     final loginForm = ref.watch(loginFormProvider);
 
     ref.listen(authProvider, (previous, next) {
@@ -162,7 +166,7 @@ class _LoginForm extends ConsumerWidget {
             ),
           ),
     
-          SizedBox(height: keyboardOpen? 30 : 75),
+          SizedBox(height: keyboardOpen? 15 : 50),
     
         ],
       ),
