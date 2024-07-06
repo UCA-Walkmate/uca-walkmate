@@ -19,7 +19,6 @@ class HomeScreen extends ConsumerWidget {
     ];
     final selectedIndex = ref.watch(selectedIndexProvider);
     final colors = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
       appBar: selectedIndex != 1? 
