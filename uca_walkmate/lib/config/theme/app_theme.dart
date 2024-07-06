@@ -17,11 +17,16 @@ class AppTheme {
   
   ThemeData getTheme() => ThemeData(
     colorScheme: ColorScheme.fromSeed(
-      seedColor: const Color(0xff1A2130),
-      primary: const Color(0xff1A2130),
+      seedColor: darkblueUW,
+      primary: darkblueUW,
       secondary: blueUW,
-
-    ), 
+      tertiary: whiteUW,
+    ),
+    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+      backgroundColor: Colors.black,
+      selectedItemColor: blueUW,
+      unselectedItemColor: whiteUW,
+    ),
     scaffoldBackgroundColor: Colors.white,
     textTheme: TextTheme(
       titleLarge: GoogleFonts.publicSans(

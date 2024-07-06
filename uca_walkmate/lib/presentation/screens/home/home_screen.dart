@@ -13,14 +13,27 @@ class HomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
      final screens = [
-      const FullScreenMap(),
       const SubjectsScreen(),
+      const FullScreenMap(),
       const EventScreen(),
     ];
     final selectedIndex = ref.watch(selectedIndexProvider);
     final colors = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
+      appBar: selectedIndex != 1? 
+        AppBar(
+          title: Text(selectedIndex == 0 ?
+            'Materias' : 'Eventos',
+            style: TextStyle(
+              color: colors.tertiary,
+              fontSize: 22,
+            ),
+          ),
+          backgroundColor: colors.primary,
+        )
+      : null,
       body: Stack(
         children: [
           Positioned.fill(
@@ -35,41 +48,34 @@ class HomeScreen extends ConsumerWidget {
                 child: Container(
                   color: Colors.transparent, // Hace el contenedor transparente
                   child: BottomNavigationBar(
-                    unselectedItemColor: Colors.white,
-                    selectedItemColor: colors.secondary,
                     currentIndex: selectedIndex,
                     onTap: (value) {
                       ref.read(selectedIndexProvider.notifier).setIndex(value);
                     },
-                    backgroundColor:
-                        Colors.black, // Fondo del BottomNavigationBar
                     elevation: 0, // Elimina la sombra
-                    items: const <BottomNavigationBarItem>[
+                    items: <BottomNavigationBarItem>[
                       BottomNavigationBarItem(
-                        icon: Icon(
-                          Icons.location_on_rounded,
-                          color: Colors.white,
-                        ),
-                        label: 'Map',
-                        activeIcon: Icon(
-                          Icons.location_on_rounded,
-                          color: Colors.blue,
-                        ),
-                      ),
-                      BottomNavigationBarItem(
-                        icon: Icon(Icons.book_rounded),
-                        label: 'Subject',
+                        icon: const Icon(Icons.book_rounded),
+                        label: 'Materias',
                         activeIcon: Icon(
                           Icons.book_rounded,
-                          color: Colors.blue,
+                          color: colors.secondary,
                         ),
                       ),
                       BottomNavigationBarItem(
-                        icon: Icon(Icons.calendar_month),
-                        label: 'Events',
+                        icon: const Icon(Icons.location_on_rounded),
+                        label: 'Mapa',
+                        activeIcon: Icon(
+                          Icons.location_on_rounded,
+                          color: colors.secondary,
+                        ),
+                      ),
+                      BottomNavigationBarItem(
+                        icon: const Icon(Icons.calendar_month),
+                        label: 'Eventos',
                         activeIcon: Icon(
                           Icons.calendar_month,
-                          color: Colors.blue,
+                          color: colors.secondary,
                         ),
                       ),
                     ],
