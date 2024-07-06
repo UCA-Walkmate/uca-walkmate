@@ -8,15 +8,15 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-class FullScreenMap extends StatefulWidget {
+class Prueba extends StatefulWidget {
   static const String routeName = 'home';
-  const FullScreenMap({super.key});
+  const Prueba({super.key});
 
   @override
-  State<FullScreenMap> createState() => _FullScreenMapState();
+  State<Prueba> createState() => _PruebaState();
 }
 
-class _FullScreenMapState extends State<FullScreenMap> {
+class _PruebaState extends State<Prueba> {
   final GraphHopperService graphHopperService =
       GraphHopperService(apiKey: Environment.apiKey);
 
