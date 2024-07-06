@@ -1,28 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:uca_walkmate/presentation/providers/auth_provider.dart';
+import 'package:uca_walkmate/presentation/providers/index_provider.dart';
 import 'package:uca_walkmate/presentation/screens/event/event_screen.dart';
 import 'package:uca_walkmate/presentation/screens/map/full_screen_map.dart';
 import 'package:uca_walkmate/presentation/screens/subject/subject_screen.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends ConsumerWidget {
   static const String routeName = 'home-screen';
 
   const HomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  int selectedIndex = 0;
-
-  @override
-  Widget build(BuildContext context) {
-    final screens = [
+  Widget build(BuildContext context, WidgetRef ref) {
+     final screens = [
       const FullScreenMap(),
       const SubjectScreen(),
       const EventScreen(),
     ];
-
+    final selectedIndex = ref.watch(selectedIndexProvider);
     final colors = Theme.of(context).colorScheme;
 
     return Scaffold(
@@ -44,9 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     selectedItemColor: colors.secondary,
                     currentIndex: selectedIndex,
                     onTap: (value) {
-                      setState(() {
-                        selectedIndex = value;
-                      });
+                      ref.read(selectedIndexProvider.notifier).setIndex(value);
                     },
                     backgroundColor:
                         Colors.black, // Fondo del BottomNavigationBar
