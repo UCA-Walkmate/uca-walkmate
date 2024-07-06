@@ -131,9 +131,7 @@ class _LoginForm extends ConsumerWidget {
               child: Material(
                 color: colors.primary,
                 child: InkWell(
-                  onTap: () {
-                    ref.read(loginFormProvider.notifier).onFormSubmit();
-                  },
+                  onTap: loginForm.isPosting? null : ref.read(loginFormProvider.notifier).onFormSubmit,
                   child: const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
                     child: Center(
