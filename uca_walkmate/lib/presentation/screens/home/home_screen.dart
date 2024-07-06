@@ -4,6 +4,7 @@ import 'package:uca_walkmate/presentation/providers/index_provider.dart';
 import 'package:uca_walkmate/presentation/screens/event/event_screen.dart';
 import 'package:uca_walkmate/presentation/screens/map/full_screen_map.dart';
 import 'package:uca_walkmate/presentation/screens/subject/subject_screen.dart';
+import 'package:uca_walkmate/presentation/widgets/bars/searchbar/search_app_bar.dart';
 
 class HomeScreen extends ConsumerWidget {
   static const String routeName = 'home-screen';
@@ -12,19 +13,24 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-     final screens = [
+    final screens = [
       const FullScreenMap(),
       const SubjectScreen(),
       const EventScreen(),
     ];
     final selectedIndex = ref.watch(selectedIndexProvider);
     final colors = Theme.of(context).colorScheme;
+    
 
     return Scaffold(
       body: Stack(
         children: [
           Positioned.fill(
             child: IndexedStack(index: selectedIndex, children: screens),
+          ),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 40),
+            child: Positioned(top: 80, child: SearchAppBar()),
           ),
           Align(
             alignment: Alignment.bottomCenter,
@@ -83,4 +89,3 @@ class HomeScreen extends ConsumerWidget {
     );
   }
 }
-

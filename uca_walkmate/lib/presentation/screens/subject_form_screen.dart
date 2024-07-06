@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:uca_walkmate/presentation/widgets/appbar/subject_app_bar.dart';
+import 'package:uca_walkmate/presentation/widgets/bars/appbar/subject_app_bar.dart';
 import 'package:uca_walkmate/presentation/widgets/form/new_subject_form.dart';
 
 class SubjectFormScreen extends StatelessWidget {
