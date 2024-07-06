@@ -33,6 +33,7 @@ class HomeScreen extends ConsumerWidget {
           backgroundColor: colors.primary,
         )
       : null,
+      backgroundColor: const Color(0xFFF8F7FA),
       body: Stack(
         children: [
           Positioned.fill(

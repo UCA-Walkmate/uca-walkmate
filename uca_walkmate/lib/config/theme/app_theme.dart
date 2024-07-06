@@ -33,6 +33,14 @@ class AppTheme {
         fontSize: 26,
         fontWeight: FontWeight.bold,
       ),
+      titleMedium: GoogleFonts.publicSans(
+        fontSize: 22,
+        fontWeight: FontWeight.bold,
+      ),
+      titleSmall: GoogleFonts.publicSans(
+        fontSize: 18,
+        fontWeight: FontWeight.bold,
+      ),
       bodyMedium: GoogleFonts.publicSans(
         fontSize: 16,
         fontWeight: FontWeight.normal,
