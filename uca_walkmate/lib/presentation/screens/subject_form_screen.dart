@@ -11,7 +11,7 @@ class SubjectFormScreen extends StatelessWidget {
   
   @override
   Widget build(context) {
-    double screenWidth = MediaQuery.of(context).size.width;
+    // double screenWidth = MediaQuery.of(context).size.width;
 
     return const Scaffold(
         resizeToAvoidBottomInset: true,
