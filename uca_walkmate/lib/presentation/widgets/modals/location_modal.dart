@@ -46,6 +46,10 @@ class LocationModal extends StatelessWidget {
                     fontSize: 15,
                   ),
                 )),
+           ElevatedButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('ir'),
+            ),
         ],
       ),
 
