@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uca_walkmate/presentation/providers/index_provider.dart';
 import 'package:uca_walkmate/presentation/screens/event/event_screen.dart';
 import 'package:uca_walkmate/presentation/screens/map/full_screen_map.dart';
-import 'package:uca_walkmate/presentation/screens/subject/subject_screen.dart';
+import 'package:uca_walkmate/presentation/screens/subject/subjects_screen.dart';
 
 class HomeScreen extends ConsumerWidget {
   static const String routeName = 'home-screen';
@@ -14,7 +14,7 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
      final screens = [
       const FullScreenMap(),
-      const SubjectScreen(),
+      const SubjectsScreen(),
       const EventScreen(),
     ];
     final selectedIndex = ref.watch(selectedIndexProvider);
