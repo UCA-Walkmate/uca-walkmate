@@ -4,9 +4,8 @@ import 'package:uca_walkmate/infrastructure/infrastructure.dart';
 class AuthRepositoryImpl implements AuthRepository {
   final AuthDatasource _authDatasource;
 
-  AuthRepositoryImpl({
-    AuthDatasource? authDatasource
-  }) : _authDatasource = authDatasource ?? AuthDatasourceImpl();
+  AuthRepositoryImpl({AuthDatasource? authDatasource})
+      : _authDatasource = authDatasource ?? AuthDatasourceImpl();
 
   @override
   Future<User> checkAuthStatus(String token) {
@@ -19,8 +18,8 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<User> register(String email, String password) {
-    return _authDatasource.register(email, password);
+  Future<User> register(
+      String email, String name, String password, String confirmPassword) {
+    return _authDatasource.register(email, name, password, confirmPassword);
   }
-
 }

@@ -12,7 +12,7 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-     final screens = [
+    final screens = [
       const SubjectsScreen(),
       const FullScreenMap(),
       const EventScreen(),
@@ -21,18 +21,18 @@ class HomeScreen extends ConsumerWidget {
     final colors = Theme.of(context).colorScheme;
 
     return Scaffold(
-      appBar: selectedIndex != 1? 
-        AppBar(
-          title: Text(selectedIndex == 0 ?
-            'Materias' : 'Eventos',
-            style: TextStyle(
-              color: colors.tertiary,
-              fontSize: 22,
-            ),
-          ),
-          backgroundColor: colors.primary,
-        )
-      : null,
+      appBar: selectedIndex != 1
+          ? AppBar(
+              title: Text(
+                selectedIndex == 0 ? 'Materias' : 'Eventos',
+                style: TextStyle(
+                  color: colors.tertiary,
+                  fontSize: 22,
+                ),
+              ),
+              backgroundColor: colors.primary,
+            )
+          : null,
       backgroundColor: const Color(0xFFF8F7FA),
       body: Stack(
         children: [
