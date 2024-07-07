@@ -12,7 +12,7 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-     final screens = [
+    final screens = [
       const FullScreenMap(),
       const SubjectScreen(),
       const EventScreen(),
@@ -83,4 +83,3 @@ class HomeScreen extends ConsumerWidget {
     );
   }
 }
-

@@ -26,7 +26,7 @@ class MyApp extends ConsumerWidget {
     return MaterialApp.router(
       routerConfig: appRouter,
       debugShowCheckedModeBanner: false,
-      title: 'Mapa UCA',
+      title: 'UCA Walkmate',
       theme: AppTheme().getTheme(),
       // home: const FullScreenMap(),
     );
