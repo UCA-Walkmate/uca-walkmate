@@ -18,8 +18,8 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<User> register(
-      String email, String name, String password, String confirmPassword) {
-    return _authDatasource.register(email, name, password, confirmPassword);
+  Future<void> register(
+      String email, String name, String password, String confirmPassword) async {
+     _authDatasource.register(email, name, password, confirmPassword);
   }
 }

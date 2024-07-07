@@ -59,15 +59,15 @@ class AuthDatasourceImpl implements AuthDatasource {
   }
 
   @override
-  Future<User> register(String email, String name, String password,
+  Future<void> register (String email, String name, String password,
       String confirmPassword) async {
     try {
-      final response = await dio
-          .post('/auth/sign-up', data: {'email': email, 'password': password});
+       final response = await dio
+          .post('/auth/sign-up', data: {'email': email, 'password': password, 'name': name, 'confirmPassword': confirmPassword});
 
-      final user = UserMapper.userJsonToEntity(response.data);
-
-      return user;
+      // final user = UserMapper.userJsonToEntity(response.data);
+      print(response.data);
+      // return user;
     } on DioException catch (e) {
       if (e.response?.statusCode == 401) {
         throw CustomException(e.response?.data['message']);

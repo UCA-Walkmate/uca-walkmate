@@ -1,58 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:uca_walkmate/presentation/providers/auth_provider.dart';
+import 'package:uca_walkmate/presentation/providers/signup_form_provider.dart';
 import 'package:uca_walkmate/presentation/widgets/shared/wave_widget.dart';
+import 'package:uca_walkmate/presentation/widgets/shared/custom_text_form_field.dart';
 
-class SignUpScreen extends StatefulWidget {
+class SignUpScreen extends StatelessWidget {
   static const String routeName = 'signup';
 
   const SignUpScreen({Key? key}) : super(key: key);
-
-  @override
-  _SignUpScreenState createState() => _SignUpScreenState();
-}
-
-class _SignUpScreenState extends State<SignUpScreen> {
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController =
-      TextEditingController();
-
-  @override
-  void dispose() {
-    // Dispose the controllers when the widget is disposed
-    nameController.dispose();
-    emailController.dispose();
-    passwordController.dispose();
-    confirmPasswordController.dispose();
-    super.dispose();
-  }
-
-  void _handleSignUp() {
-    final String name = nameController.text.trim();
-    final String email = emailController.text.trim();
-    final String password = passwordController.text;
-    final String confirmPassword = confirmPasswordController.text;
-
-    if (name.isEmpty ||
-        email.isEmpty ||
-        password.isEmpty ||
-        confirmPassword.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Por favor completa todos los campos.')),
-      );
-      return;
-    }
-
-    if (password != confirmPassword) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Las contraseñas no coinciden.')),
-      );
-      return;
-    }
-
-    print('Registrando usuario: $name, $email');
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,6 +25,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             height: size.height - 200,
             color: colors.primary,
           ),
+
           AnimatedPositioned(
             duration: const Duration(milliseconds: 500),
             curve: Curves.easeOutQuad,
@@ -78,11 +36,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
               color: Colors.white,
             ),
           ),
-          const Padding(
-            padding: EdgeInsets.only(top: 70.0),
+
+          Padding(
+            padding: const EdgeInsets.only(top: 70.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
+              children: const <Widget>[
                 Text(
                   'Regístrate',
                   style: TextStyle(
@@ -94,117 +53,155 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ],
             ),
           ),
+
           // FORM
           Padding(
             padding: EdgeInsets.symmetric(
                 horizontal: 30.0, vertical: keyboardOpen ? 40.0 : 0),
             child: Align(
               alignment: Alignment.bottomCenter,
-              child: Form(
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text('Nombre', style: textTheme.bodyMedium),
-                      TextFormField(
-                        controller: nameController,
-                        decoration: const InputDecoration(
-                            hintText: 'John Doe',
-                            prefixIcon: Icon(Icons.person_outline),
-                            border: UnderlineInputBorder()),
+              child: _SignUpForm(
+                keyboardOpen: keyboardOpen,
+                colors: colors,
+                textTheme: textTheme,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SignUpForm extends ConsumerWidget {
+  final bool keyboardOpen;
+  final ColorScheme colors;
+  final TextTheme textTheme;
+
+  const _SignUpForm({
+    required this.keyboardOpen,
+    required this.colors,
+    required this.textTheme,
+  });
+
+  void showSnackbar(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final signupForm = ref.watch(signUpFormProvider);
+    final password = ref.watch(signUpFormProvider).password.value;
+    final confirPassword = ref.watch(signUpFormProvider).confirmPassword.value;
+
+    
+
+    ref.listen(authProvider, (previous, next) {
+      if (next.errorMessage.isEmpty) return;
+
+      showSnackbar(context, next.errorMessage);
+    });
+
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          Text('Nombre', style: textTheme.bodyMedium),
+          CustomTextFormField(
+            hintText: 'John Doe',
+            prefixIcon: Icons.person_outline,
+            onChanged: ref.read(signUpFormProvider.notifier).onNameChange,
+            errorMessage:
+                signupForm.isFormPosted ? signupForm.name.errorMessage : null,
+          ),
+          const SizedBox(height: 20),
+          Text('Email', style: textTheme.bodyMedium),
+          CustomTextFormField(
+            hintText: 'johndoe@email.com',
+            prefixIcon: Icons.email_outlined,
+            onChanged: ref.read(signUpFormProvider.notifier).onEmailChange,
+            errorMessage:
+                signupForm.isFormPosted ? signupForm.email.errorMessage : null,
+          ),
+          const SizedBox(height: 20),
+          Text('Contraseña', style: textTheme.bodyMedium),
+          CustomTextFormField(
+            hintText: '**********',
+            prefixIcon: Icons.lock_outline,
+            obscureText: true,
+            onChanged: ref.read(signUpFormProvider.notifier).onPasswordChange,
+            errorMessage: signupForm.isFormPosted
+                ? signupForm.password.errorMessage
+                : null,
+          ),
+          const SizedBox(height: 20),
+          Text('Confirmar contraseña', style: textTheme.bodyMedium),
+          CustomTextFormField(
+            hintText: '**********',
+            prefixIcon: Icons.lock_outline,
+            obscureText: true,
+            onChanged:
+                ref.read(signUpFormProvider.notifier).onConfirmPasswordChange,
+            errorMessage: signupForm.isFormPosted
+                ? signupForm.confirmPassword.errorMessage
+                : null,
+          ),
+          const SizedBox(height: 35),
+          SizedBox(
+            width: double.infinity,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: Material(
+                color: colors.primary,
+                child: InkWell(
+                  onTap: signupForm.isPosting
+                      ? null
+                      : () {
+                          if (password != confirPassword) {
+                            showSnackbar(context, 'Las contraseñas no coinciden');
+                            return;
+                          }
+                          ref.read(signUpFormProvider.notifier).onFormSubmit();
+                          context.go('/login');
+                        },
+                  child: const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                    child: Center(
+                      child: Text(
+                        "Registrarse",
+                        style: TextStyle(color: Colors.white),
                       ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Text('Email', style: textTheme.bodyMedium),
-                      TextFormField(
-                        controller: emailController,
-                        decoration: const InputDecoration(
-                            hintText: 'johndoe@email.com',
-                            prefixIcon: Icon(Icons.email_outlined),
-                            border: UnderlineInputBorder()),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Text('Contraseña', style: textTheme.bodyMedium),
-                      TextFormField(
-                        controller: passwordController,
-                        obscureText: true,
-                        decoration: const InputDecoration(
-                            hintText: '**********',
-                            prefixIcon: Icon(Icons.lock_outline),
-                            border: UnderlineInputBorder()),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Text('Confirmar contraseña', style: textTheme.bodyMedium),
-                      TextFormField(
-                        controller: confirmPasswordController,
-                        obscureText: true,
-                        decoration: const InputDecoration(
-                            hintText: '**********',
-                            prefixIcon: Icon(Icons.lock_outline),
-                            border: UnderlineInputBorder()),
-                      ),
-                      const SizedBox(
-                        height: 35,
-                      ),
-                      SizedBox(
-                        width: double.infinity,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: Material(
-                            color: colors.primary,
-                            child: InkWell(
-                              onTap: _handleSignUp,
-                              child: const Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 20, vertical: 15),
-                                  child: Center(
-                                      child: Text(
-                                    "Registrarse",
-                                    style: TextStyle(color: Colors.white),
-                                  ))),
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text('¿Ya tienes una cuenta?',
-                              style: textTheme.bodyMedium?.copyWith(
-                                fontSize: 15,
-                              )),
-                          const SizedBox(
-                            width: 5,
-                          ),
-                          InkWell(
-                              child: Text(
-                                'Inicia sesión',
-                                style: textTheme.bodyMedium?.copyWith(
-                                    fontSize: 15, color: colors.primary),
-                              ),
-                              onTap: () {
-                                context.go('/');
-                              }),
-                        ],
-                      ),
-                      SizedBox(
-                        height: keyboardOpen ? 0 : 45,
-                      ),
-                    ],
+                    ),
                   ),
                 ),
               ),
             ),
           ),
+          const SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                '¿Ya tienes una cuenta?',
+                style: textTheme.bodyMedium?.copyWith(fontSize: 15),
+              ),
+              const SizedBox(width: 5),
+              InkWell(
+                child: Text(
+                  'Inicia sesión',
+                  style: textTheme.bodyMedium
+                      ?.copyWith(fontSize: 15, color: colors.primary),
+                ),
+                onTap: () {
+                  context.go('/');
+                },
+              ),
+            ],
+          ),
+          SizedBox(height: keyboardOpen ? 0 : 45),
         ],
       ),
     );
