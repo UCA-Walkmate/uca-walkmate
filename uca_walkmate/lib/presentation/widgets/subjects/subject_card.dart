@@ -2,11 +2,54 @@ import 'package:flutter/material.dart';
 import 'package:uca_walkmate/presentation/widgets/shared/badge_widget.dart';
 
 class SubjectCard extends StatelessWidget {
-  const SubjectCard({super.key});
+  final String name;
+  final String image;
+  final String location;
+  final String schedule;
+  final String status;
+
+  SubjectCard({
+    super.key, 
+    required this.name,
+    required this.image,
+    required this.location,
+    required this.schedule, 
+    required this.status
+  });
+
+  final Map<String, String> daysMap = {
+    'L': 'Lunes',
+    'M': 'Martes',
+    'X': 'Miércoles',
+    'J': 'Jueves',
+    'V': 'Viernes',
+    'S': 'Sábado',
+    'D': 'Domingo',
+  };
+
+  String convertDaysString(String daysString) {
+    List<String> days = [];
+
+    for (int i = 0; i < daysString.length; i++) {
+      String char = daysString[i];
+      if (char != '-') {
+        days.add(daysMap[char] ?? '');
+      }
+    }
+
+    if (days.isEmpty) {
+      return '';
+    } else if (days.length == 1) {
+      return days.first;
+    } else {
+      return '${days.sublist(0, days.length - 1).join(', ')} y ${days.last}';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
+    String scheduleText = convertDaysString(schedule);
 
     return Card(
       clipBehavior: Clip.hardEdge,
@@ -20,7 +63,7 @@ class SubjectCard extends StatelessWidget {
                 width: double.infinity,
                 height: 150,
                 child: Image.asset(
-                  'assets/images/card_image-1.jpg',
+                  image,
                   fit: BoxFit.cover,
                 ),
               ),
@@ -48,8 +91,8 @@ class SubjectCard extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Cálculo Diferencial', style: Theme.of(context).textTheme.titleSmall),
-                    const BadgeComponent(),
+                    Text(name, style: Theme.of(context).textTheme.titleSmall),
+                    BadgeComponent(status: status,),
                   ],
                 ),
                 
@@ -59,7 +102,14 @@ class SubjectCard extends StatelessWidget {
                   children: [
                     const Icon(Icons.location_on_rounded),
                     const SizedBox(width: 10),
-                    Text('Edificio Aulas "D"', style: Theme.of(context).textTheme.bodyMedium),
+                    Expanded(
+                      child: Text(
+                        location,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis, 
+                        style: Theme.of(context).textTheme.bodyMedium
+                      ),
+                    ),
                   ],
                 ),
 
@@ -69,7 +119,14 @@ class SubjectCard extends StatelessWidget {
                   children: [
                     const Icon(Icons.access_time_rounded),
                     const SizedBox(width: 10),
-                    Text('Lunes y Miércoles', style: Theme.of(context).textTheme.bodyMedium),
+                    Expanded(
+                      child: Text(
+                        scheduleText,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis, 
+                        style: Theme.of(context).textTheme.bodyMedium
+                      ),
+                    ),
                   ],
                 ),
 

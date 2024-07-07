@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:uca_walkmate/presentation/providers/subject_provider.dart';
 import 'package:uca_walkmate/presentation/widgets/subjects/subject_card.dart';
 
 class SubjectsScreen extends StatelessWidget {
@@ -15,18 +17,31 @@ class SubjectsScreen extends StatelessWidget {
   }
 }
 
-class _SubjectsView extends StatelessWidget {
+class _SubjectsView extends ConsumerWidget {
   const _SubjectsView();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final subjState = ref.watch(subjectProvider);
     final colors = Theme.of(context).colorScheme;
 
+    print(subjState.subjects);
+
     return SingleChildScrollView(
-      child: Column(
+      child: subjState.isLoading? const Center(child: CircularProgressIndicator(),) 
+      
+      :
+      
+      Column(
         children: [
-          // TODO: Implementar el listado de materias
-          const SubjectCard(),
+          ...subjState.subjects.map((subject) => SubjectCard(
+            name: subject.name, 
+            image: 'assets/images/card_image-${subject.image}.jpg',
+            location: subject.location.name,
+            schedule: subject.schedule,
+            status: subject.status,
+          )),
+          // const SubjectCard(),
 
           const SizedBox(height: 20),
 
@@ -46,7 +61,9 @@ class _SubjectsView extends StatelessWidget {
               }, 
               label: Text('Añadir nueva materia', style: TextStyle(color: colors.primary, fontWeight: FontWeight.w700),),
             ),
-          )
+          ),
+          
+          const SizedBox(height: 75),
 
         ],
       ),      
