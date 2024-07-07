@@ -8,6 +8,9 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+//enum para mostrar el cuadro de dialogo
+enum DialogAction { yes, abort }
+
 class FullScreenMap extends StatefulWidget {
   static const String routeName = 'home';
   const FullScreenMap({super.key});
@@ -22,6 +25,7 @@ class _FullScreenMapState extends State<FullScreenMap> {
 
   List<LatLng> route = [];
   Timer? timer;
+  final DialogAction action = DialogAction.yes;
 
   @override
   void dispose() {
@@ -37,11 +41,20 @@ class _FullScreenMapState extends State<FullScreenMap> {
       if (await Permission.location.request().isGranted) {
         // Obtener la posición actual
         Position position = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.high);
+            desiredAccuracy: LocationAccuracy.high);
         LatLng start = LatLng(position.latitude, position.longitude);
         LatLng end = const LatLng(13.681108, -89.236334);
 
         List<LatLng> puntos = await graphHopperService.getRoute(start, end);
+
+        //verifica si la lista de puntos esta vacia y si lo esta no muestra un snackbar
+        if (puntos.isEmpty) {
+          
+          openDialog(DialogAction.abort);
+          print('Llego vacio');
+          return;
+        }
+
         setState(() {
           if (puntos.isNotEmpty) {
             route = puntos;
@@ -56,9 +69,9 @@ class _FullScreenMapState extends State<FullScreenMap> {
       } else {
         // Manejar permiso denegado
         // Cuadro de diálogo
-        openDialog();
+        openDialog(DialogAction.yes);
         Position position = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.high);
+            desiredAccuracy: LocationAccuracy.high);
       }
     } else {
       // Detener el temporizador y limpiar la ruta si el servicio de ubicación está deshabilitado
@@ -68,40 +81,87 @@ class _FullScreenMapState extends State<FullScreenMap> {
         route = [];
       });
       // Cuadro de diálogo
-      openDialog();
+      openDialog(DialogAction.yes);
       // Position position = await Geolocator.getCurrentPosition(
       //     desiredAccuracy: LocationAccuracy.high);
     }
   }
 
   // Función que muestra el cuadro de diálogo
-  void openDialog() {
-    showDialog(
+  void openDialog(DialogAction action) {
+    if (action == DialogAction.yes) {
+      showDialog(
+        context: context,
+        barrierDismissible:
+            false, // Haciendo que no se pueda cerrar el diálogo al tocar fuera de él
+        builder: (context) => AlertDialog(
+          title: Column(
+            children: [
+              Image.asset(
+                'assets/images/ubicacion.png',
+                height: 100,
+                width: 100,
+              ),
+              const Text(
+                'Ubicación Deshabilitada',
+                style: TextStyle(
+                    color: Colors.red,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold),
+              )
+            ],
+          ),
+          content: const Text(
+              'Para continuar es necesario habilitar la ubicación en tu dispositivo'),
+          actions: [
+            FilledButton(
+                onPressed: () {
+                  Geolocator
+                      .openLocationSettings(); // Abrir configuración de ubicación
+                  Navigator.of(context).pop();
+                },
+                child: const Text('Aceptar'))
+          ],
+        ),
+      );
+    } else {
+      showDialog(
       context: context,
-      barrierDismissible: false, // Haciendo que no se pueda cerrar el diálogo al tocar fuera de él
+      barrierDismissible:
+          false, // Haciendo que no se pueda cerrar el diálogo al tocar fuera de él
       builder: (context) => AlertDialog(
         title: Column(
           children: [
-            Image.asset('assets/images/ubicacion.png', height: 100, width: 100,),
+            Image.asset(
+              'assets/images/error.png',
+              height: 100,
+              width: 100,
+            ),
+            const SizedBox(height: 10,),
             const Text(
-              'Ubicación Deshabilitada',
-              style: TextStyle(color: Colors.red, fontSize: 20, fontWeight: FontWeight.bold),
+              'UPPS! Algo salió mal',
+              style: TextStyle(
+                  color: Colors.red, fontSize: 20, fontWeight: FontWeight.bold),
             )
           ],
         ),
         content: const Text(
-          'Para continuar es necesario habilitar la ubicación en tu dispositivo'),
+            'No se pudo trazar la ruta, por favor intenta de nuevo más tarde'),
         actions: [
           FilledButton(
-            onPressed: () {
-              Geolocator.openLocationSettings(); // Abrir configuración de ubicación
-              Navigator.of(context).pop();
-            },
-            child: const Text('Aceptar')
-          )
+              onPressed: () {
+                // Geolocator
+                //     .openLocationSettings(); // Abrir configuración de ubicación
+                Navigator.of(context).pop();
+              },
+              child: const Text(
+              'Aceptar',
+              style: TextStyle(
+                  color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),))
         ],
       ),
     );
+    }
   }
 
   final boundsss = LatLngBounds(
