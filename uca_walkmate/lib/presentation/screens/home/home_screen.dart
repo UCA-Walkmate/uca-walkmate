@@ -13,38 +13,41 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-     final screens = [
+    final screens = [
       const SubjectsScreen(),
       const FullScreenMap(),
       const EventScreen(),
     ];
     final selectedIndex = ref.watch(selectedIndexProvider);
     final colors = Theme.of(context).colorScheme;
-    
 
     return Scaffold(
-      appBar: selectedIndex != 1? 
-        AppBar(
-          title: Text(selectedIndex == 0 ?
-            'Materias' : 'Eventos',
-            style: TextStyle(
-              color: colors.tertiary,
-              fontSize: 22,
-            ),
-          ),
-          backgroundColor: colors.primary,
-        )
-      : null,
+      appBar: selectedIndex != 1
+          ? AppBar(
+              title: Text(
+                selectedIndex == 0 ? 'Materias' : 'Eventos',
+                style: TextStyle(
+                  color: colors.tertiary,
+                  fontSize: 22,
+                ),
+              ),
+              backgroundColor: colors.primary,
+            )
+          : null,
       backgroundColor: const Color(0xFFF8F7FA),
       body: Stack(
         children: [
           Positioned.fill(
             child: IndexedStack(index: selectedIndex, children: screens),
           ),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 40),
-            child: Positioned(top: 80, child: SearchAppBar()),
-          ),
+
+          //cargando la barra de busqueda solo en la pantalla de mapas
+          if (selectedIndex == 1)
+            const Padding(
+              padding: EdgeInsets.fromLTRB(20, 40, 20, 0),
+              child: SearchAppBar(),
+            ),
+
           Align(
             alignment: Alignment.bottomCenter,
             child: Padding(

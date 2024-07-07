@@ -29,15 +29,19 @@ class LocationModal extends StatelessWidget {
           ),
           Align(
             alignment: Alignment.centerLeft,
-            child: Text('Jon de Cortina',
-                      textAlign: TextAlign.start,
-                      style: GoogleFonts.publicSans(
-                        textStyle: const TextStyle(
-                          color: Color(0XFF1A2130),
-                          fontSize: 30,
-                        ),
-                      )),
+            child: Container(
+              alignment: Alignment.center,
+              child: Text('Jon de Cortina', // aca ira el nombre del lugar seleccionado en la busqueda
+                        textAlign: TextAlign.start,
+                        style: GoogleFonts.publicSans(
+                          textStyle: const TextStyle(
+                            color: Color(0XFF1A2130),
+                            fontSize: 30,
+                          ),
+                        )),
+            ),
           ),
+          const SizedBox( height: 15),
            Text('Vigilancia',
                 textAlign: TextAlign.end,
                 style: GoogleFonts.publicSans(
@@ -46,9 +50,10 @@ class LocationModal extends StatelessWidget {
                     fontSize: 15,
                   ),
                 )),
+          const SizedBox( height: 15),
            ElevatedButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('ir'),
+              child: const Text('Ir', style: TextStyle(fontSize: 20),),
             ),
         ],
       ),

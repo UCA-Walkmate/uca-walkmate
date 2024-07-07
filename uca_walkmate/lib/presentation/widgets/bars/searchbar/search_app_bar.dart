@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:uca_walkmate/presentation/widgets/modals/location_modal.dart';
 
 class SearchAppBar extends StatelessWidget {
@@ -7,10 +6,11 @@ class SearchAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       decoration: BoxDecoration(
-        color: const Color(0XFF1A2130),
+        color:  colors.onPrimary,
         borderRadius: BorderRadius.circular(30.0),
       ),
       child: Row(
@@ -27,12 +27,12 @@ class SearchAppBar extends StatelessWidget {
               },
               color: Colors.white),
           const SizedBox(width: 8.0),
-          const Expanded(
+           Expanded(
             child: TextField(
-              style: TextStyle(color: Color(0XFFFDFFE2)),
+              style: TextStyle(color: const Color(0XFFFDFFE2).withOpacity(0.4)),
               decoration: InputDecoration(
-                hintText: 'Buscar',
-                hintStyle: TextStyle(color: Color(0XFFFDFFE2)),
+                hintText: 'Buscar...',
+                hintStyle: TextStyle(color: const  Color(0XFFFDFFE2).withOpacity(0.5) ),
                 border: InputBorder.none,
               ),
             ),
