@@ -29,6 +29,7 @@ class _FullScreenMapState extends State<FullScreenMap> {
     super.dispose();
   }
 
+  //Funcion de trazado de ruta  entre la ubicacion actual y un destino de la UCA
   Future<void> getCoordinate() async {
     // Verificar si el servicio de ubicación está habilitado
     bool isLocationServiceEnabled = await Geolocator.isLocationServiceEnabled();
@@ -49,13 +50,13 @@ class _FullScreenMapState extends State<FullScreenMap> {
 
         // Inicializar el temporizador si no está ya inicializado
         if (timer == null) {
-          timer = Timer.periodic(Duration(seconds: 2), (Timer t) => getCoordinate());
+          timer = Timer.periodic(
+              const Duration(seconds: 2), (Timer t) => getCoordinate());
         }
       } else {
         // Manejar permiso denegado
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Location permission is required')),
-        );
+        //cuadro de dialogo
+        openDialog();
       }
     } else {
       // Detener el temporizador y limpiar la ruta si el servicio de ubicación está deshabilitado
@@ -64,10 +65,32 @@ class _FullScreenMapState extends State<FullScreenMap> {
       setState(() {
         route = [];
       });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Location service is disabled')),
-      );
+      //cuadro de dialogo
+      openDialog();
     }
+  }
+
+  //funcion que muestra el cuadro de dialogo
+  void openDialog() {
+    showDialog(
+        context: context,
+        //haciendo que no se pueda cerrar el dialogo al tocar fuera de el
+        barrierDismissible: false,
+        builder: (context) => AlertDialog(
+                // icon: const Icon(Icons.warning, color: Colors.red),
+                title: Column(
+                  children: [
+                    Image.asset('assets/images/ubicacion.png', height: 100, width: 100,),
+                    const Text('Ubicacion Deshabilitada', style: TextStyle(color: Colors.red, fontSize: 20, fontWeight: FontWeight.bold),)
+                  ],
+                ),
+                content: const Text(
+                    'Para continuar es necesario habilitar la ubicacion en tu dispositivo'),
+                actions: [
+                  FilledButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: const Text('Aceptar'))
+                ]));
   }
 
   final boundsss = LatLngBounds(
