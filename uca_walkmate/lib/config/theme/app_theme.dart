@@ -21,6 +21,8 @@ class AppTheme {
       primary: darkblueUW,
       secondary: blueUW,
       tertiary: whiteUW,
+      onPrimary: Colors.black,
+
     ),
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(
       backgroundColor: Colors.black,
