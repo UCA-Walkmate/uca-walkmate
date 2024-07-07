@@ -4,6 +4,7 @@ import 'package:uca_walkmate/presentation/providers/index_provider.dart';
 import 'package:uca_walkmate/presentation/screens/event/event_screen.dart';
 import 'package:uca_walkmate/presentation/screens/map/full_screen_map.dart';
 import 'package:uca_walkmate/presentation/screens/subject/subjects_screen.dart';
+import 'package:uca_walkmate/presentation/widgets/bars/searchbar/search_app_bar.dart';
 
 class HomeScreen extends ConsumerWidget {
   static const String routeName = 'home-screen';
@@ -12,7 +13,7 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-     final screens = [
+    final screens = [
       const SubjectsScreen(),
       const FullScreenMap(),
       const EventScreen(),
@@ -21,24 +22,32 @@ class HomeScreen extends ConsumerWidget {
     final colors = Theme.of(context).colorScheme;
 
     return Scaffold(
-      appBar: selectedIndex != 1? 
-        AppBar(
-          title: Text(selectedIndex == 0 ?
-            'Materias' : 'Eventos',
-            style: TextStyle(
-              color: colors.tertiary,
-              fontSize: 22,
-            ),
-          ),
-          backgroundColor: colors.primary,
-        )
-      : null,
+      appBar: selectedIndex != 1
+          ? AppBar(
+              title: Text(
+                selectedIndex == 0 ? 'Materias' : 'Eventos',
+                style: TextStyle(
+                  color: colors.tertiary,
+                  fontSize: 22,
+                ),
+              ),
+              backgroundColor: colors.primary,
+            )
+          : null,
       backgroundColor: const Color(0xFFF8F7FA),
       body: Stack(
         children: [
           Positioned.fill(
             child: IndexedStack(index: selectedIndex, children: screens),
           ),
+
+          //cargando la barra de busqueda solo en la pantalla de mapas
+          if (selectedIndex == 1)
+            const Padding(
+              padding: EdgeInsets.fromLTRB(20, 40, 20, 0),
+              child: SearchAppBar(),
+            ),
+
           Align(
             alignment: Alignment.bottomCenter,
             child: Padding(

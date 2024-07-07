@@ -29,7 +29,7 @@ class _FullScreenMapState extends State<FullScreenMap> {
     super.dispose();
   }
 
-  //Funcion de trazado de ruta  entre la ubicacion actual y un destino de la UCA
+  // Función de trazado de ruta entre la ubicación actual y un destino de la UCA
   Future<void> getCoordinate() async {
     // Verificar si el servicio de ubicación está habilitado
     bool isLocationServiceEnabled = await Geolocator.isLocationServiceEnabled();
@@ -37,7 +37,7 @@ class _FullScreenMapState extends State<FullScreenMap> {
       if (await Permission.location.request().isGranted) {
         // Obtener la posición actual
         Position position = await Geolocator.getCurrentPosition(
-            desiredAccuracy: LocationAccuracy.high);
+          desiredAccuracy: LocationAccuracy.high);
         LatLng start = LatLng(position.latitude, position.longitude);
         LatLng end = const LatLng(13.681108, -89.236334);
 
@@ -55,8 +55,10 @@ class _FullScreenMapState extends State<FullScreenMap> {
         }
       } else {
         // Manejar permiso denegado
-        //cuadro de dialogo
+        // Cuadro de diálogo
         openDialog();
+        Position position = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high);
       }
     } else {
       // Detener el temporizador y limpiar la ruta si el servicio de ubicación está deshabilitado
@@ -65,32 +67,41 @@ class _FullScreenMapState extends State<FullScreenMap> {
       setState(() {
         route = [];
       });
-      //cuadro de dialogo
+      // Cuadro de diálogo
       openDialog();
+      // Position position = await Geolocator.getCurrentPosition(
+      //     desiredAccuracy: LocationAccuracy.high);
     }
   }
 
-  //funcion que muestra el cuadro de dialogo
+  // Función que muestra el cuadro de diálogo
   void openDialog() {
     showDialog(
-        context: context,
-        //haciendo que no se pueda cerrar el dialogo al tocar fuera de el
-        barrierDismissible: false,
-        builder: (context) => AlertDialog(
-                // icon: const Icon(Icons.warning, color: Colors.red),
-                title: Column(
-                  children: [
-                    Image.asset('assets/images/ubicacion.png', height: 100, width: 100,),
-                    const Text('Ubicacion Deshabilitada', style: TextStyle(color: Colors.red, fontSize: 20, fontWeight: FontWeight.bold),)
-                  ],
-                ),
-                content: const Text(
-                    'Para continuar es necesario habilitar la ubicacion en tu dispositivo'),
-                actions: [
-                  FilledButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      child: const Text('Aceptar'))
-                ]));
+      context: context,
+      barrierDismissible: false, // Haciendo que no se pueda cerrar el diálogo al tocar fuera de él
+      builder: (context) => AlertDialog(
+        title: Column(
+          children: [
+            Image.asset('assets/images/ubicacion.png', height: 100, width: 100,),
+            const Text(
+              'Ubicación Deshabilitada',
+              style: TextStyle(color: Colors.red, fontSize: 20, fontWeight: FontWeight.bold),
+            )
+          ],
+        ),
+        content: const Text(
+          'Para continuar es necesario habilitar la ubicación en tu dispositivo'),
+        actions: [
+          FilledButton(
+            onPressed: () {
+              Geolocator.openLocationSettings(); // Abrir configuración de ubicación
+              Navigator.of(context).pop();
+            },
+            child: const Text('Aceptar')
+          )
+        ],
+      ),
+    );
   }
 
   final boundsss = LatLngBounds(
