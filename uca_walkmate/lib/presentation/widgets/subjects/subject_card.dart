@@ -8,7 +8,7 @@ class SubjectCard extends StatelessWidget {
   final String schedule;
   final String status;
 
-  SubjectCard({
+  const SubjectCard({
     super.key, 
     required this.name,
     required this.image,
@@ -17,39 +17,10 @@ class SubjectCard extends StatelessWidget {
     required this.status
   });
 
-  final Map<String, String> daysMap = {
-    'L': 'Lunes',
-    'M': 'Martes',
-    'X': 'Miércoles',
-    'J': 'Jueves',
-    'V': 'Viernes',
-    'S': 'Sábado',
-    'D': 'Domingo',
-  };
-
-  String convertDaysString(String daysString) {
-    List<String> days = [];
-
-    for (int i = 0; i < daysString.length; i++) {
-      String char = daysString[i];
-      if (char != '-') {
-        days.add(daysMap[char] ?? '');
-      }
-    }
-
-    if (days.isEmpty) {
-      return '';
-    } else if (days.length == 1) {
-      return days.first;
-    } else {
-      return '${days.sublist(0, days.length - 1).join(', ')} y ${days.last}';
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
-    String scheduleText = convertDaysString(schedule);
 
     return Card(
       clipBehavior: Clip.hardEdge,
@@ -115,20 +86,20 @@ class SubjectCard extends StatelessWidget {
 
                 const SizedBox(height: 10),
 
-                Row(
-                  children: [
-                    const Icon(Icons.access_time_rounded),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: Text(
-                        scheduleText,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis, 
-                        style: Theme.of(context).textTheme.bodyMedium
-                      ),
-                    ),
-                  ],
-                ),
+                // Row(
+                //   children: [
+                //     const Icon(Icons.access_time_rounded),
+                //     const SizedBox(width: 10),
+                //     Expanded(
+                //       child: Text(
+                //         scheduleText,
+                //         maxLines: 2,
+                //         overflow: TextOverflow.ellipsis, 
+                //         style: Theme.of(context).textTheme.bodyMedium
+                //       ),
+                //     ),
+                //   ],
+                // ),
 
                 const SizedBox(height: 20),
 

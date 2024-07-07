@@ -6,13 +6,18 @@ class SubjectRepositoryImpl implements SubjectRepository {
   SubjectRepositoryImpl(this._datasource);
  
   @override
-  Future<void> addSubject(Subject subject) {
-    return _datasource.addSubject(subject);
+  Future<void> addSubject(String name, int locationId, String schedule, String status, int image) {
+    return _datasource.addSubject(name, locationId, schedule, status, image);
   }
 
   @override
   Future<List<Subject>> getSubjectsByUserId(int userId) {
     return _datasource.getSubjectsByUserId(userId);
+  }
+  
+  @override
+  Future<List<Location>> getLocations() {
+    return _datasource.getLocations();
   }
 
 }

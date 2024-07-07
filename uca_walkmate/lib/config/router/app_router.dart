@@ -7,7 +7,7 @@ import 'package:uca_walkmate/presentation/screens/event/event_screen.dart';
 import 'package:uca_walkmate/presentation/screens/home/home_screen.dart';
 import 'package:uca_walkmate/presentation/screens/login/login_screen.dart';
 import 'package:uca_walkmate/presentation/screens/signup/sign_up_screen.dart';
-import 'package:uca_walkmate/presentation/screens/subject/subjects_screen.dart';
+import 'package:uca_walkmate/presentation/screens/subject/subject_form_screen.dart';
 
 final goRouterProvider = Provider((ref) {
   final goRouterNotifier = ref.read(goRouterNotifierProvider);
@@ -27,9 +27,9 @@ final goRouterProvider = Provider((ref) {
         builder: (context, state) => const LoginScreen(),
       ),
       GoRoute(
-        name: SubjectsScreen.routeName,
-        path: '/subject',
-        builder: (context, state) => const SubjectsScreen(),
+        name: SubjectFormScreen.routeName,
+        path: '/add-subject',
+        builder: (context, state) => const SubjectFormScreen(),
       ),
       GoRoute(
         name: EventScreen.routeName,

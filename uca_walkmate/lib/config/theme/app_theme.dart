@@ -21,6 +21,8 @@ class AppTheme {
       primary: darkblueUW,
       secondary: blueUW,
       tertiary: whiteUW,
+      onPrimary: Colors.black,
+
     ),
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(
       backgroundColor: Colors.black,
@@ -49,7 +51,16 @@ class AppTheme {
         fontSize: 14,
         fontWeight: FontWeight.normal,
       ),
-    )
+    ),
+    inputDecorationTheme: InputDecorationTheme(
+      hintStyle: GoogleFonts.publicSans(
+        textStyle: const TextStyle(
+          color: Color(0XFF4B465C),
+          fontSize: 15,
+          fontWeight: FontWeight.normal,
+        ),
+      ),
+    ),
   );
 
 }
