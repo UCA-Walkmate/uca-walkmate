@@ -7,7 +7,7 @@ final subjectProvider = StateNotifierProvider<SubjectNotifier, SubjectState>((re
   final user = ref.watch(authProvider).user;
 
   final subjectRepository = SubjectRepositoryImpl(
-    SubjectDatasourceImpl(accessToken: user!.token),
+    SubjectDatasourceImpl(accessToken: user!.token, userId: user.id)
   );
 
   return SubjectNotifier(
@@ -25,6 +25,7 @@ class SubjectNotifier extends StateNotifier<SubjectState> {
     required this.user,
   }) : super(SubjectState()) {
     getSubjectsByUserId(user.id);
+    getLocations();
   }
 
   Future<void> getSubjectsByUserId(int userId) async {
@@ -37,23 +38,41 @@ class SubjectNotifier extends StateNotifier<SubjectState> {
       isLoading: false,
     );
   }
+
+  Future<void> getLocations() async {
+    final locations = await subjectRepository.getLocations();
+
+    state = state.copyWith(
+      locations: locations
+    );
+  }
+
+  Future<void> addSubject(String name, int locationId, String schedule, String status, int image) async {
+    await subjectRepository.addSubject(name, locationId, schedule, status, image);
+
+    getSubjectsByUserId(user.id);
+  }
 }
 
 class SubjectState {
   final List<Subject> subjects;
+  final List<Location> locations;
   final bool isLoading;
 
   SubjectState({
     this.subjects = const [],
+    this.locations = const [],
     this.isLoading = false,
   });
 
   SubjectState copyWith({
     List<Subject>? subjects,
+    List<Location>? locations,
     bool? isLoading,
   }) {
     return SubjectState(
       subjects: subjects ?? this.subjects,
+      locations: locations ?? this.locations,
       isLoading: isLoading ?? this.isLoading,
     );
   }

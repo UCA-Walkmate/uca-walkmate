@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:uca_walkmate/presentation/providers/subject_provider.dart';
 import 'package:uca_walkmate/presentation/widgets/subjects/subject_card.dart';
 
@@ -24,8 +25,6 @@ class _SubjectsView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final subjState = ref.watch(subjectProvider);
     final colors = Theme.of(context).colorScheme;
-
-    print(subjState.subjects);
 
     return SingleChildScrollView(
       child: subjState.isLoading? const Center(child: CircularProgressIndicator(),) 
@@ -57,7 +56,7 @@ class _SubjectsView extends ConsumerWidget {
                 ),
               ),
               onPressed: () {
-              
+                context.push('/add-subject');
               }, 
               label: Text('Añadir nueva materia', style: TextStyle(color: colors.primary, fontWeight: FontWeight.w700),),
             ),

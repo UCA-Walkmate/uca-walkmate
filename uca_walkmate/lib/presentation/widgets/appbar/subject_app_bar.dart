@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class SubjectsAppBar extends StatelessWidget {
@@ -28,11 +29,11 @@ class SubjectsAppBar extends StatelessWidget {
               height: 60,
               decoration: const BoxDecoration(
                   color: Color(0XFFFDFFE2), shape: BoxShape.circle),
-              child:  IconButton(
-                icon: const Icon(Icons.arrow_back) ,
+              child: IconButton(
+                icon: const Icon(Icons.arrow_back),
                 color: const Color(0XFF1A2130),
                 onPressed: () {
-                  
+                  context.pop();
                 },
                 // size: 25,
               ),
