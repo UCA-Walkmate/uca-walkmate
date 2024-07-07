@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class SelectedIndexNotifier extends StateNotifier<int> {
-  SelectedIndexNotifier() : super(0);
+  SelectedIndexNotifier() : super(1);
 
   void setIndex(int index) {
     state = index;
