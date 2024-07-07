@@ -1,4 +1,9 @@
 export 'entities/role.dart';
 export 'entities/user.dart';
+export 'entities/category.dart';
+export 'entities/location.dart';
+export 'entities/subject.dart';
 export 'repositories/auth_repository.dart';
+export 'repositories/subject_repository.dart';
 export 'datasources/auth_datasource.dart';
+export 'datasources/subject_datasource.dart';

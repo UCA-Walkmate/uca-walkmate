@@ -5,3 +5,5 @@ export 'mappers/role_mapper.dart';
 export 'repositories/auth_repository_impl.dart';
 export 'shared/services/key_value_storage.dart';
 export 'shared/services/key_value_storage_impl.dart';
+export 'repositories/subject_repository_impl.dart';
+export 'datasources/subject_datasource_impl.dart';

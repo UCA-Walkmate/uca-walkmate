@@ -17,15 +17,28 @@ class AppTheme {
   
   ThemeData getTheme() => ThemeData(
     colorScheme: ColorScheme.fromSeed(
-      seedColor: const Color(0xff1A2130),
-      primary: const Color(0xff1A2130),
+      seedColor: darkblueUW,
+      primary: darkblueUW,
       secondary: blueUW,
-
-    ), 
+      tertiary: whiteUW,
+    ),
+    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+      backgroundColor: Colors.black,
+      selectedItemColor: blueUW,
+      unselectedItemColor: whiteUW,
+    ),
     scaffoldBackgroundColor: Colors.white,
     textTheme: TextTheme(
       titleLarge: GoogleFonts.publicSans(
         fontSize: 26,
+        fontWeight: FontWeight.bold,
+      ),
+      titleMedium: GoogleFonts.publicSans(
+        fontSize: 22,
+        fontWeight: FontWeight.bold,
+      ),
+      titleSmall: GoogleFonts.publicSans(
+        fontSize: 18,
         fontWeight: FontWeight.bold,
       ),
       bodyMedium: GoogleFonts.publicSans(
