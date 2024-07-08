@@ -26,33 +26,16 @@ class EventCard extends StatelessWidget {
       elevation: 3.0,
       child: Column(
         children: [
-          Stack(
-            children: [
-              
-              SizedBox(
-                width: double.infinity,
-                height: 150,
-                child: Image.asset(
-                  image,
-                  fit: BoxFit.cover,
-                ),
-              ),
-
-              Align(
-                alignment: Alignment.topRight,
-                child: Container(
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20))
-                  ),
-                  child: IconButton(
-                    icon: const Icon(Icons.more_vert), 
-                    onPressed: () {},
-                  ),
-                )
-              ),
-            ],
+          SizedBox(
+            width: double.infinity,
+            height: 150,
+            child: Image.asset(
+              image,
+              fit: BoxFit.cover,
+            ),
           ),
+          
+          
 
           Padding(
             padding: const EdgeInsets.all(20),
