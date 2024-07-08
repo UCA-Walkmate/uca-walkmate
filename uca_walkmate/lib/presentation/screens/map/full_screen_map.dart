@@ -8,6 +8,7 @@ import 'package:uca_walkmate/presentation/widgets/bars/searchbar/search_app_bar.
 import 'package:url_launcher/url_launcher.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 
 // Enum para mostrar el cuadro de diálogo
 enum DialogAction { yes, abort }
@@ -41,8 +42,14 @@ class _FullScreenMapState extends State<FullScreenMap> {
     super.dispose();
   }
 
+  void cleanRoute() {
+    setState(() {
+      route = [];
+    });
+  }
+
   // Función de trazado de ruta entre la ubicación actual y un destino de la UCA
-  Future<void> getCoordinate() async {
+  Future<void> getCoordinate(LatLng coordinates) async {
     // Verificar si el servicio de ubicación está habilitado
     bool isLocationServiceEnabled = await Geolocator.isLocationServiceEnabled();
     if (isLocationServiceEnabled) {
@@ -51,7 +58,7 @@ class _FullScreenMapState extends State<FullScreenMap> {
         position = await Geolocator.getCurrentPosition(
             desiredAccuracy: LocationAccuracy.high);
         LatLng start = LatLng(position.latitude, position.longitude);
-        LatLng end = const LatLng(13.681108, -89.236334);
+        LatLng end = coordinates;
 
         List<LatLng> puntos = await graphHopperService.getRoute(start, end);
 
@@ -71,10 +78,7 @@ class _FullScreenMapState extends State<FullScreenMap> {
         });
 
         // Inicializar el temporizador si no está ya inicializado
-        if (timer == null) {
-          timer = Timer.periodic(
-              const Duration(seconds: 2), (Timer t) => getCoordinate());
-        }
+        
       } else {
         // Manejar permiso denegado
         openDialog(DialogAction.yes);
@@ -228,21 +232,20 @@ class _FullScreenMapState extends State<FullScreenMap> {
                 ),
               ],
             ),
+            CurrentLocationLayer(
+              style: const LocationMarkerStyle(
+                marker: Indicator(),
+                markerSize: Size(30, 30),
+                showAccuracyCircle: false,
+              ),
+            ),
+
           ],
         ),
-        FloatingActionButton(
-          backgroundColor: Colors.blueAccent,
-          onPressed: () => getCoordinate(),
-          child: const Icon(
-            Icons.route,
-            color: Colors.red,
-          ),
-          
+        Padding(
+          padding: const EdgeInsets.fromLTRB(20, 55, 20, 0),
+          child: SearchAppBar(getCoordinate: getCoordinate, cleanRoute: cleanRoute),
         ),
-        const Padding(
-            padding: EdgeInsets.fromLTRB(20, 55, 20, 0),
-            child: SearchAppBar(),
-          ),
       ],
     );
   }

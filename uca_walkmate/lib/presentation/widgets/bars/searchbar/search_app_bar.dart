@@ -4,13 +4,21 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:uca_walkmate/config/constants/environment.dart';
 import 'package:uca_walkmate/infrastructure/mappers/location_mapper.dart';
 import 'package:uca_walkmate/presentation/providers/auth_provider.dart';
 import 'package:uca_walkmate/presentation/widgets/modals/location_modal.dart';
 
 class SearchAppBar extends ConsumerStatefulWidget {
-  const SearchAppBar({super.key});
+  final Future<void> Function(LatLng) getCoordinate;
+  final Function() cleanRoute;
+
+  const SearchAppBar({
+    super.key, 
+    required this.getCoordinate, 
+    required this.cleanRoute
+  });
 
   @override
   ConsumerState<SearchAppBar> createState() => _SearchAppBarState();
@@ -63,12 +71,13 @@ class _SearchAppBarState extends ConsumerState<SearchAppBar> {
               final response = await Dio()
                   .get('${Environment.apiUrl}/locations/name/$selectedItem');
 
-              final selectedLocation =
-                  LocationMapper.locationJsonToLocation(response.data);
+              final selectedLocation = LocationMapper.locationJsonToLocation(response.data);
 
               showModalBottomSheet(
                 context: context,
                 builder: (BuildContext context) => LocationModal(
+                  getCoordinate: widget.getCoordinate,
+                  cleanRoute: widget.cleanRoute,
                   location: selectedLocation.name,
                   category: selectedLocation.category,
                   geom: selectedLocation.geom,

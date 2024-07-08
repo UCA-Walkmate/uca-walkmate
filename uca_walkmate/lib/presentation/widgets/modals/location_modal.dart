@@ -2,14 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:uca_walkmate/domain/domain.dart';
+import 'package:uca_walkmate/presentation/screens/map/full_screen_map.dart';
 
 class LocationModal extends StatelessWidget {
+  final Future<void> Function(LatLng) getCoordinate;
+  final Function() cleanRoute;
   final String location;
   final Category category;
   final Geom geom;
 
-  const LocationModal({
-    super.key, 
+  LocationModal({
+    super.key,
+    required this.getCoordinate,
+    required this.cleanRoute,
     required this.location, 
     required this.category, 
     required this.geom
@@ -65,7 +70,10 @@ class LocationModal extends StatelessWidget {
                 )),
           const SizedBox( height: 15),
            ElevatedButton(
-              onPressed: ()  {
+              onPressed: () {
+                cleanRoute();
+                getCoordinate(coordinates);
+
                 Navigator.pop(context);
               },
               child: const Text('Ir', style: TextStyle(fontSize: 20),),
