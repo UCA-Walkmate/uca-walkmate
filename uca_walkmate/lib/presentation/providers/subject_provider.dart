@@ -52,6 +52,12 @@ class SubjectNotifier extends StateNotifier<SubjectState> {
 
     getSubjectsByUserId(user.id);
   }
+
+  Future<void> deleteSubjectById(int subjectId) async {
+    await subjectRepository.deleteSubjectById(subjectId);
+
+    getSubjectsByUserId(user.id);
+  }
 }
 
 class SubjectState {

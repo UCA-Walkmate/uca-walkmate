@@ -34,6 +34,7 @@ class _SubjectsView extends ConsumerWidget {
       Column(
         children: [
           ...subjState.subjects.map((subject) => SubjectCard(
+            id: subject.id,
             name: subject.name, 
             image: 'assets/images/card_image-${subject.image}.jpg',
             location: subject.location.name,

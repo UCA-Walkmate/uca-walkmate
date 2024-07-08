@@ -42,6 +42,9 @@ class _EventView extends ConsumerWidget {
               location: e.location.name,
               date: changingDate(e.date)[0].toUpperCase() + changingDate(e.date).substring(1),
               description: e.description),
+        ),
+        const SizedBox(
+          height: 60,
         )
       ]),
     );

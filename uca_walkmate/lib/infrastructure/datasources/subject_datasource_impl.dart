@@ -12,20 +12,14 @@ class SubjectDatasourceImpl implements SubjectDatasource {
   SubjectDatasourceImpl({
     required this.accessToken,
     required this.userId,
-  }) : dio = Dio(
-    BaseOptions(
-      baseUrl: Environment.apiUrl,
-      headers: {
-        'Authorization': 'Bearer $accessToken',
-      }
-    )
-  );
+  }) : dio = Dio(BaseOptions(baseUrl: Environment.apiUrl, headers: {
+          'Authorization': 'Bearer $accessToken',
+        }));
 
   @override
-  Future<void> addSubject(String name, int locationId, String schedule, String status, int image) async {
-        
+  Future<void> addSubject(String name, int locationId, String schedule,
+      String status, int image) async {
     try {
-      
       await dio.post('/subjects', data: {
         'name': name,
         'userId': userId,
@@ -33,20 +27,17 @@ class SubjectDatasourceImpl implements SubjectDatasource {
         'schedule': schedule,
         'status': status,
         'image': image,
-      });  
-
+      });
     } catch (e) {
       throw Exception('An error occurred');
     }
-    
   }
 
   @override
   Future<List<Subject>> getSubjectsByUserId(int userId) async {
-    
     try {
       final response = await dio.get<List>('/subjects/user/$userId');
-      
+
       final List<Subject> subjects = [];
 
       for (final subject in response.data ?? []) {
@@ -54,18 +45,16 @@ class SubjectDatasourceImpl implements SubjectDatasource {
       }
 
       return subjects;
-
     } catch (e) {
       throw Exception('An error occurred');
     }
-  
   }
-  
+
   @override
   Future<List<Location>> getLocations() async {
     try {
       final response = await dio.get<List>('/locations');
-      
+
       final List<Location> locations = [];
 
       for (final location in response.data ?? []) {
@@ -73,7 +62,16 @@ class SubjectDatasourceImpl implements SubjectDatasource {
       }
 
       return locations;
+    } catch (e) {
+      throw Exception('An error occurred');
+    }
+  }
 
+  @override
+  Future<void> deleteSubjectById(int subjectId) async {
+    try {
+      final response = await dio.delete('/subjects/$subjectId');
+      print(response);
     } catch (e) {
       throw Exception('An error occurred');
     }
