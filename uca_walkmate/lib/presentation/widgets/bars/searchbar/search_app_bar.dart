@@ -1,20 +1,22 @@
 import 'dart:async';
-
 import 'package:dio/dio.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:uca_walkmate/config/constants/environment.dart';
 import 'package:uca_walkmate/infrastructure/mappers/location_mapper.dart';
+import 'package:uca_walkmate/presentation/providers/auth_provider.dart';
 import 'package:uca_walkmate/presentation/widgets/modals/location_modal.dart';
 
-class SearchAppBar extends StatefulWidget {
+class SearchAppBar extends ConsumerStatefulWidget {
   const SearchAppBar({super.key});
 
   @override
-  State<SearchAppBar> createState() => _SearchAppBarState();
+  ConsumerState<SearchAppBar> createState() => _SearchAppBarState();
 }
 
-class _SearchAppBarState extends State<SearchAppBar> {
+class _SearchAppBarState extends ConsumerState<SearchAppBar> {
   final _openDropDownProgKey = GlobalKey<DropdownSearchState<String>>();
   final TextEditingController _controller = TextEditingController();
   Timer? _debounce;
@@ -28,12 +30,12 @@ class _SearchAppBarState extends State<SearchAppBar> {
   }
 
   Future<List<String>> getData() async {
-    var response = await Dio().get(
-      '${Environment.apiUrl}/locations/search',
-      queryParameters: {'fragment': search}
-    );
-    
-    return (response.data as List).map((location) => location['name'] as String).toList();
+    var response = await Dio().get('${Environment.apiUrl}/locations/search',
+        queryParameters: {'fragment': search});
+
+    return (response.data as List)
+        .map((location) => location['name'] as String)
+        .toList();
   }
 
   @override
@@ -43,7 +45,7 @@ class _SearchAppBarState extends State<SearchAppBar> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       decoration: BoxDecoration(
-        color:  colors.onPrimary,
+        color: colors.onPrimary,
         borderRadius: BorderRadius.circular(30.0),
       ),
       child: Stack(
@@ -58,9 +60,11 @@ class _SearchAppBarState extends State<SearchAppBar> {
 
               _setValue();
 
-              final response = await Dio().get('${Environment.apiUrl}/locations/name/$selectedItem');
+              final response = await Dio()
+                  .get('${Environment.apiUrl}/locations/name/$selectedItem');
 
-              final selectedLocation = LocationMapper.locationJsonToLocation(response.data);
+              final selectedLocation =
+                  LocationMapper.locationJsonToLocation(response.data);
 
               showModalBottomSheet(
                 context: context,
@@ -81,53 +85,88 @@ class _SearchAppBarState extends State<SearchAppBar> {
                 alignment: Alignment.centerLeft,
                 child: TextFormField(
                   controller: _controller,
-                  style: const TextStyle(color: Color(0XFFFFFFFF), fontSize: 16),
+                  style:
+                      const TextStyle(color: Color(0XFFFFFFFF), fontSize: 16),
                   decoration: InputDecoration(
                     hintText: 'Buscar...',
-                    hintStyle: TextStyle(color: const  Color(0XFFFDFFE2).withOpacity(0.5), fontSize: 16),
+                    hintStyle: TextStyle(
+                        color: const Color(0XFFFDFFE2).withOpacity(0.5),
+                        fontSize: 16),
                     border: InputBorder.none,
                   ),
-                  
                   onChanged: (value) {
                     if (_debounce?.isActive ?? false) _debounce!.cancel();
 
-                    _debounce = Timer(const Duration(milliseconds: 850), () async {                      
-                      
+                    _debounce =
+                        Timer(const Duration(milliseconds: 850), () async {
                       setState(() {
                         search = value;
                       });
 
-                      _openDropDownProgKey.currentState?.openDropDownSearch();                     
+                      _openDropDownProgKey.currentState?.openDropDownSearch();
                     });
-
-                  } 
+                  },
                 ),
               );
             },
-            // popupProps: ,
             dropdownDecoratorProps: DropDownDecoratorProps(
               dropdownSearchDecoration: InputDecoration(
                 hintText: 'Buscar...',
-                hintStyle: TextStyle(color: const  Color(0XFFFDFFE2).withOpacity(0.5), fontSize: 16),
+                hintStyle: TextStyle(
+                    color: const Color(0XFFFDFFE2).withOpacity(0.5),
+                    fontSize: 16),
                 border: InputBorder.none,
                 icon: const Icon(Icons.search, color: Color(0XFFFDFFE2)),
               ),
             ),
             asyncItems: (filter) => getData(),
           ),
-
           Positioned(
             right: 0,
-            child: IconButton(
-              onPressed: () {
-                
-              },
+            child: PopupMenuButton<int>(
               icon: const Icon(Icons.person, color: Color(0XFFFDFFE2)),
+              onSelected: (value) {
+                if (value == 1) {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: const Text('Confirmación'),
+                        content: const Text(
+                            '¿Estás seguro que deseas cerrar sesión?'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop(false);
+                            },
+                            child: const Text('Cancelar'),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop(true);
+                            },
+                            child: const Text('Cerrar sesión'),
+                          ),
+                        ],
+                      );
+                    },
+                  ).then((result) {
+                    if (result == true) {
+                      ref.read(authProvider.notifier).logout();
+                      context.go('/login');
+                    }
+                  });
+                }
+              },
+              itemBuilder: (BuildContext context) => [
+                const PopupMenuItem<int>(
+                  value: 1,
+                  child: Text('Cerrar sesión'),
+                ),
+              ],
             ),
-          )
-        
-        ] 
-
+          ),
+        ],
       ),
     );
   }
