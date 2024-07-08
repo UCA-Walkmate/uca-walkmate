@@ -42,11 +42,11 @@ class HomeScreen extends ConsumerWidget {
           ),
 
           //cargando la barra de busqueda solo en la pantalla de mapas
-          if (selectedIndex == 1)
-            const Padding(
-              padding: EdgeInsets.fromLTRB(20, 40, 20, 0),
-              child: SearchAppBar(),
-            ),
+          // if (selectedIndex == 1)
+          //   const Padding(
+          //     padding: EdgeInsets.fromLTRB(20, 40, 20, 0),
+          //     child: SearchAppBar(),
+          //   ),
 
           Align(
             alignment: Alignment.bottomCenter,

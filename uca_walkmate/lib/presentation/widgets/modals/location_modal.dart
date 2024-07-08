@@ -1,11 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:latlong2/latlong.dart';
+import 'package:uca_walkmate/domain/domain.dart';
 
 class LocationModal extends StatelessWidget {
-  const LocationModal({super.key});
+  final String location;
+  final Category category;
+  final Geom geom;
+
+  const LocationModal({
+    super.key, 
+    required this.location, 
+    required this.category, 
+    required this.geom
+  });
 
   @override
   Widget build(BuildContext context) {
+    final coordinates = LatLng(geom.coordinates[1], geom.coordinates[0]);
+
     return Container(
       width: MediaQuery.of(context).size.width,
       height: 300,
@@ -31,7 +44,7 @@ class LocationModal extends StatelessWidget {
             alignment: Alignment.centerLeft,
             child: Container(
               alignment: Alignment.center,
-              child: Text('Jon de Cortina', // aca ira el nombre del lugar seleccionado en la busqueda
+              child: Text(location, // aca ira el nombre del lugar seleccionado en la busqueda
                         textAlign: TextAlign.start,
                         style: GoogleFonts.publicSans(
                           textStyle: const TextStyle(
@@ -42,7 +55,7 @@ class LocationModal extends StatelessWidget {
             ),
           ),
           const SizedBox( height: 15),
-           Text('Vigilancia',
+           Text(category.name,
                 textAlign: TextAlign.end,
                 style: GoogleFonts.publicSans(
                   textStyle: const TextStyle(
@@ -52,7 +65,9 @@ class LocationModal extends StatelessWidget {
                 )),
           const SizedBox( height: 15),
            ElevatedButton(
-              onPressed: () => Navigator.pop(context),
+              onPressed: ()  {
+                Navigator.pop(context);
+              },
               child: const Text('Ir', style: TextStyle(fontSize: 20),),
             ),
         ],

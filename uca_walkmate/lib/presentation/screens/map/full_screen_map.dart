@@ -4,6 +4,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:uca_walkmate/config/constants/environment.dart';
 import 'package:uca_walkmate/data/apis/graph_hopper_api.dart';
+import 'package:uca_walkmate/presentation/widgets/bars/searchbar/search_app_bar.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -17,8 +18,7 @@ class FullScreenMap extends StatefulWidget {
 }
 
 class _FullScreenMapState extends State<FullScreenMap> {
-  final GraphHopperService graphHopperService =
-      GraphHopperService(apiKey: Environment.apiKey);
+  final GraphHopperService graphHopperService = GraphHopperService(apiKey: Environment.apiKey);
 
   List<LatLng> route = [];
   Timer? timer;
@@ -109,59 +109,67 @@ class _FullScreenMapState extends State<FullScreenMap> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        FlutterMap(
-          options: MapOptions(
-              initialCenter: const LatLng(13.680144, -89.236275),
-              initialZoom: 15,
-              minZoom: 10,
-              cameraConstraint: CameraConstraint.contain(bounds: boundsss)),
-          children: [
-            TileLayer(
-              urlTemplate: Environment.mapBox,
-              userAgentPackageName: 'com.example.mapa_uca',
-              retinaMode: true,
-            ),
-            RichAttributionWidget(
-              attributions: [
-                TextSourceAttribution(
-                  '© Mapbox',
-                  onTap: () => launchUrl(
-                      Uri.parse('https://www.mapbox.com/about/maps/')),
-                ),
-                TextSourceAttribution(
-                  '© OpenStreetMap contributors',
-                  onTap: () => launchUrl(
-                      Uri.parse('https://openstreetmap.org/copyright')),
-                ),
-                TextSourceAttribution(
-                  'Improve this map',
-                  onTap: () => launchUrl(
-                      Uri.parse('https://www.mapbox.com/map-feedback/')),
-                ),
-              ],
-            ),
-            PolylineLayer(
-              polylines: [
-                Polyline(
-                  points: route,
-                  color: Colors.blue,
-                  strokeWidth: 4,
-                ),
-              ],
-            ),
-          ],
-        ),
-        FloatingActionButton(
-          backgroundColor: Colors.blueAccent,
-          onPressed: () => getCoordinate(),
-          child: const Icon(
-            Icons.route,
-            color: Colors.red,
+    return GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: Stack(
+        children: [
+          FlutterMap(
+            options: MapOptions(
+                initialCenter: const LatLng(13.680144, -89.236275),
+                initialZoom: 15,
+                minZoom: 10,
+                cameraConstraint: CameraConstraint.contain(bounds: boundsss)),
+            children: [
+              TileLayer(
+                urlTemplate: Environment.mapBox,
+                userAgentPackageName: 'com.example.mapa_uca',
+                retinaMode: true,
+              ),
+              RichAttributionWidget(
+                attributions: [
+                  TextSourceAttribution(
+                    '© Mapbox',
+                    onTap: () => launchUrl(
+                        Uri.parse('https://www.mapbox.com/about/maps/')),
+                  ),
+                  TextSourceAttribution(
+                    '© OpenStreetMap contributors',
+                    onTap: () => launchUrl(
+                        Uri.parse('https://openstreetmap.org/copyright')),
+                  ),
+                  TextSourceAttribution(
+                    'Improve this map',
+                    onTap: () => launchUrl(
+                        Uri.parse('https://www.mapbox.com/map-feedback/')),
+                  ),
+                ],
+              ),
+              PolylineLayer(
+                polylines: [
+                  Polyline(
+                    points: route,
+                    color: Colors.blue,
+                    strokeWidth: 4,
+                  ),
+                ],
+              ),
+            ],
           ),
-        )
-      ],
+          FloatingActionButton(
+            backgroundColor: Colors.blueAccent,
+            onPressed: () => getCoordinate(),
+            child: const Icon(
+              Icons.route,
+              color: Colors.red,
+            ),
+          ),
+          
+          const Padding(
+            padding: EdgeInsets.fromLTRB(20, 55, 20, 0),
+            child: SearchAppBar(),
+          ),
+        ],
+      ),
     );
   }
 }
