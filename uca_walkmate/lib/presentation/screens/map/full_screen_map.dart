@@ -8,7 +8,6 @@ import 'package:uca_walkmate/presentation/widgets/bars/searchbar/search_app_bar.
 import 'package:url_launcher/url_launcher.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 
 // Enum para mostrar el cuadro de diálogo
 enum DialogAction { yes, abort }
@@ -129,8 +128,14 @@ class _FullScreenMapState extends State<FullScreenMap> {
                   Geolocator.openLocationSettings(); // Abrir configuración de ubicación
                   Navigator.of(context).pop();
                 },
-                child: const Text('Aceptar'))
-          ],
+                child: const Text(
+                  'Aceptar',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold),
+                ),)
+          ]
         ),
       );
     } else {
@@ -223,15 +228,6 @@ class _FullScreenMapState extends State<FullScreenMap> {
                 ),
               ],
             ),
-            // Solo se muestra el marcador si se está trazando la ruta
-            // if (routing)
-            //   CurrentLocationLayer(
-            //     style: const LocationMarkerStyle(
-            //       marker: Indicator(),
-            //       markerSize: Size(30, 30),
-            //       showAccuracyCircle: false,
-            //     ),
-            //   ),
           ],
         ),
         FloatingActionButton(
