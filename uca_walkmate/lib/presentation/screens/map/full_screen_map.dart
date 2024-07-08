@@ -4,6 +4,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:uca_walkmate/config/constants/environment.dart';
 import 'package:uca_walkmate/data/apis/graph_hopper_api.dart';
+import 'package:uca_walkmate/presentation/widgets/bars/searchbar/search_app_bar.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -21,8 +22,7 @@ class FullScreenMap extends StatefulWidget {
 }
 
 class _FullScreenMapState extends State<FullScreenMap> {
-  final GraphHopperService graphHopperService =
-      GraphHopperService(apiKey: Environment.apiKey);
+  final GraphHopperService graphHopperService = GraphHopperService(apiKey: Environment.apiKey);
 
   List<LatLng> route = [];
   Timer? timer;
@@ -241,7 +241,12 @@ class _FullScreenMapState extends State<FullScreenMap> {
             Icons.route,
             color: Colors.red,
           ),
-        )
+          
+        ),
+        const Padding(
+            padding: EdgeInsets.fromLTRB(20, 55, 20, 0),
+            child: SearchAppBar(),
+          ),
       ],
     );
   }
