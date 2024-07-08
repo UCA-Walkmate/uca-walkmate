@@ -19,5 +19,10 @@ class SubjectRepositoryImpl implements SubjectRepository {
   Future<List<Location>> getLocations() {
     return _datasource.getLocations();
   }
+  
+  @override
+  Future<void> deleteSubjectById(int subjectId) {
+    return _datasource.deleteSubjectById(subjectId);
+  }
 
 }
