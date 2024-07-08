@@ -100,10 +100,6 @@ Integrado con PostgreSQL/PostGIS para almacenamiento de datos geoespaciales, y e
  - Instalar la aplicación desde el administrador de archivos en el dispositivo móbil.
  - Posteriormente acceder a la aplicación desde el menú del móbil.
 
-## Compatibilidad de licencias
-
--   Análisis realizado con ScanCode Tool Kit
-
 ## Tipos de error
 
 UCA Walkmate plantea ser la sucesora inoficial de UCA Maps, de la cual se tomó inspiración para desarrollar la aplicación, esta, sin embargo, no se pudo retomar por incompatibilidades y cambios de funcionamiento en de las diferentes versiones de herrramientas utilizadas durante su desarrollo, es por esto que solamente se tomó el concepto y no el código, siendo este el primer error con el que se tuvo que lididar.
