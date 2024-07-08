@@ -7,8 +7,9 @@ import 'package:uca_walkmate/data/apis/graph_hopper_api.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 
-//enum para mostrar el cuadro de dialogo
+// Enum para mostrar el cuadro de diálogo
 enum DialogAction { yes, abort }
 
 class FullScreenMap extends StatefulWidget {
@@ -26,6 +27,14 @@ class _FullScreenMapState extends State<FullScreenMap> {
   List<LatLng> route = [];
   Timer? timer;
   final DialogAction action = DialogAction.yes;
+  late Position position;
+  bool routing = false;
+  // Bounds para limitar la vista del mapa
+  final bounds = LatLngBounds(
+    const LatLng(13.691159, -89.222943), const LatLng(13.668918, -89.251077));
+  // Bounds para aumentar la vista del mapa
+  final bounds2 = LatLngBounds(
+    const LatLng(14.352850, -87.318319), const LatLng(13.377791, -90.437194));
 
   @override
   void dispose() {
@@ -40,24 +49,25 @@ class _FullScreenMapState extends State<FullScreenMap> {
     if (isLocationServiceEnabled) {
       if (await Permission.location.request().isGranted) {
         // Obtener la posición actual
-        Position position = await Geolocator.getCurrentPosition(
+        position = await Geolocator.getCurrentPosition(
             desiredAccuracy: LocationAccuracy.high);
         LatLng start = LatLng(position.latitude, position.longitude);
         LatLng end = const LatLng(13.681108, -89.236334);
 
         List<LatLng> puntos = await graphHopperService.getRoute(start, end);
 
-        //verifica si la lista de puntos esta vacia y si lo esta no muestra un snackbar
+        // Verifica si la lista de puntos está vacía y si lo está no muestra un snackbar
         if (puntos.isEmpty) {
-          
           openDialog(DialogAction.abort);
-          print('Llego vacio');
+          routing = false;
+          puntos = [];
           return;
         }
 
         setState(() {
           if (puntos.isNotEmpty) {
             route = puntos;
+            routing = true;
           }
         });
 
@@ -68,10 +78,11 @@ class _FullScreenMapState extends State<FullScreenMap> {
         }
       } else {
         // Manejar permiso denegado
-        // Cuadro de diálogo
         openDialog(DialogAction.yes);
-        Position position = await Geolocator.getCurrentPosition(
-            desiredAccuracy: LocationAccuracy.high);
+        setState(() {
+          routing = false;
+          route = [];
+        });
       }
     } else {
       // Detener el temporizador y limpiar la ruta si el servicio de ubicación está deshabilitado
@@ -79,11 +90,10 @@ class _FullScreenMapState extends State<FullScreenMap> {
       timer = null;
       setState(() {
         route = [];
+        routing = false;
       });
       // Cuadro de diálogo
       openDialog(DialogAction.yes);
-      // Position position = await Geolocator.getCurrentPosition(
-      //     desiredAccuracy: LocationAccuracy.high);
     }
   }
 
@@ -116,8 +126,7 @@ class _FullScreenMapState extends State<FullScreenMap> {
           actions: [
             FilledButton(
                 onPressed: () {
-                  Geolocator
-                      .openLocationSettings(); // Abrir configuración de ubicación
+                  Geolocator.openLocationSettings(); // Abrir configuración de ubicación
                   Navigator.of(context).pop();
                 },
                 child: const Text('Aceptar'))
@@ -126,46 +135,48 @@ class _FullScreenMapState extends State<FullScreenMap> {
       );
     } else {
       showDialog(
-      context: context,
-      barrierDismissible:
-          false, // Haciendo que no se pueda cerrar el diálogo al tocar fuera de él
-      builder: (context) => AlertDialog(
-        title: Column(
-          children: [
-            Image.asset(
-              'assets/images/error.png',
-              height: 100,
-              width: 100,
-            ),
-            const SizedBox(height: 10,),
-            const Text(
-              'UPPS! Algo salió mal',
-              style: TextStyle(
-                  color: Colors.red, fontSize: 20, fontWeight: FontWeight.bold),
-            )
+        context: context,
+        barrierDismissible:
+            false, // Haciendo que no se pueda cerrar el diálogo al tocar fuera de él
+        builder: (context) => AlertDialog(
+          title: Column(
+            children: [
+              Image.asset(
+                'assets/images/error.png',
+                height: 100,
+                width: 100,
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              const Text(
+                'UPPS! Algo salió mal',
+                style: TextStyle(
+                    color: Colors.red,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold),
+              )
+            ],
+          ),
+          content: const Text(
+              'No se pudo trazar la ruta, por favor intenta de nuevo más tarde'),
+          actions: [
+            FilledButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text(
+                  'Aceptar',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold),
+                ))
           ],
         ),
-        content: const Text(
-            'No se pudo trazar la ruta, por favor intenta de nuevo más tarde'),
-        actions: [
-          FilledButton(
-              onPressed: () {
-                // Geolocator
-                //     .openLocationSettings(); // Abrir configuración de ubicación
-                Navigator.of(context).pop();
-              },
-              child: const Text(
-              'Aceptar',
-              style: TextStyle(
-                  color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),))
-        ],
-      ),
-    );
+      );
     }
   }
-
-  final boundsss = LatLngBounds(
-      const LatLng(13.691159, -89.222943), const LatLng(13.668918, -89.251077));
 
   @override
   Widget build(BuildContext context) {
@@ -173,10 +184,11 @@ class _FullScreenMapState extends State<FullScreenMap> {
       children: [
         FlutterMap(
           options: MapOptions(
-              initialCenter: const LatLng(13.680144, -89.236275),
-              initialZoom: 15,
-              minZoom: 10,
-              cameraConstraint: CameraConstraint.contain(bounds: boundsss)),
+            initialCenter: const LatLng(13.680144, -89.236275),
+            initialZoom: 15,
+            minZoom: 10,
+            cameraConstraint: routing ? CameraConstraint.contain(bounds: bounds2) : CameraConstraint.containCenter(bounds: bounds),
+          ),
           children: [
             TileLayer(
               urlTemplate: Environment.mapBox,
@@ -211,6 +223,15 @@ class _FullScreenMapState extends State<FullScreenMap> {
                 ),
               ],
             ),
+            // Solo se muestra el marcador si se está trazando la ruta
+            // if (routing)
+            //   CurrentLocationLayer(
+            //     style: const LocationMarkerStyle(
+            //       marker: Indicator(),
+            //       markerSize: Size(30, 30),
+            //       showAccuracyCircle: false,
+            //     ),
+            //   ),
           ],
         ),
         FloatingActionButton(
@@ -223,5 +244,14 @@ class _FullScreenMapState extends State<FullScreenMap> {
         )
       ],
     );
+  }
+}
+
+class Indicator extends StatelessWidget {
+  const Indicator({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Image.asset('assets/images/log.png',);
   }
 }
